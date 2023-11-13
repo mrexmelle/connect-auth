@@ -1,0 +1,29 @@
+CREATE DATABASE auth;
+CREATE USER auth WITH PASSWORD 'auth123';
+GRANT CONNECT ON DATABASE auth TO auth;
+
+\c auth;
+
+CREATE EXTENSION pgcrypto;
+
+CREATE TABLE IF NOT EXISTS credentials(
+	employee_id TEXT NOT NULL,
+	password_hash TEXT NOT NULL,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL,
+	deleted_at TIMESTAMPTZ DEFAULT NULL,
+	CONSTRAINT pk_credentials PRIMARY KEY(employee_id)
+);
+GRANT SELECT, UPDATE, INSERT, DELETE ON credentials TO auth;
+
+CREATE TABLE IF NOT EXISTS profiles(
+	ehid TEXT NOT NULL,
+	employee_id TEXT NOT NULL,
+	email_address TEXT,
+	name TEXT NOT NULL,
+	dob DATE DEFAULT NULL,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL,
+	CONSTRAINT pk_profiles PRIMARY KEY(ehid)
+);
+GRANT SELECT, UPDATE, INSERT, DELETE ON profiles TO auth;

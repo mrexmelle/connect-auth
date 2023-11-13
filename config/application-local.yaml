@@ -1,0 +1,17 @@
+app:
+  datasource:
+    host: 127.0.0.1
+    port: 5432
+    user: auth
+    password: auth123
+    dbname: auth
+    sslmode: disable
+    timezone: Asia/Jakarta
+  security:
+    jwt:
+      secret: 1nt3rst3ll4r-*-a5tR0
+      valid-minute: 90
+    default-user-password: 123
+  server:
+    port: 8080
+    
