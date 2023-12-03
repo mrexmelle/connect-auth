@@ -7,12 +7,12 @@ import (
 
 type Service struct {
 	Config            *config.Config
-	ProfileRepository *Repository
+	ProfileRepository Repository
 }
 
 func NewService(
 	cfg *config.Config,
-	r *Repository) *Service {
+	r Repository) *Service {
 	return &Service{
 		Config:            cfg,
 		ProfileRepository: r,

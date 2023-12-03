@@ -7,17 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type RepositoryImpl struct {
-	Config    *config.Config
-	TableName string
-}
-
 type Repository interface {
 	CreateWithDb(db *gorm.DB, employeeId string, password string) error
 	ExistsByEmployeeIdAndPassword(employeeId string, password string) (bool, error)
 	DeleteByEmployeeId(employeeId string) error
 	UpdatePasswordByEmployeeIdAndPassword(newPassword string, employeeId string, currentPassword string) error
 	ResetPasswordByEmployeeId(employeeId string) error
+}
+
+type RepositoryImpl struct {
+	Config    *config.Config
+	TableName string
 }
 
 func NewRepository(cfg *config.Config) Repository {

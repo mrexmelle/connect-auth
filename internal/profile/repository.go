@@ -10,19 +10,26 @@ import (
 	"gorm.io/gorm"
 )
 
-type Repository struct {
+type Repository interface {
+	PrepareWithDb(db *gorm.DB, employeeId string) error
+	UpdateByEhid(fields map[string]string, ehid string) error
+	FindByEhid(ehid string) (Entity, error)
+	DeleteByEhid(ehid string) error
+}
+
+type RepositoryImpl struct {
 	Config    *config.Config
 	TableName string
 }
 
-func NewRepository(cfg *config.Config) *Repository {
-	return &Repository{
+func NewRepository(cfg *config.Config) Repository {
+	return &RepositoryImpl{
 		Config:    cfg,
 		TableName: "profiles",
 	}
 }
 
-func (r *Repository) PrepareWithDb(
+func (r *RepositoryImpl) PrepareWithDb(
 	db *gorm.DB,
 	employeeId string,
 ) error {
@@ -39,7 +46,7 @@ func (r *Repository) PrepareWithDb(
 	return res.Error
 }
 
-func (r *Repository) UpdateByEhid(
+func (r *RepositoryImpl) UpdateByEhid(
 	fields map[string]string,
 	ehid string,
 ) error {
@@ -81,7 +88,7 @@ func (r *Repository) UpdateByEhid(
 	return nil
 }
 
-func (r *Repository) FindByEhid(ehid string) (Entity, error) {
+func (r *RepositoryImpl) FindByEhid(ehid string) (Entity, error) {
 	response := Entity{
 		Ehid: ehid,
 	}
@@ -100,7 +107,7 @@ func (r *Repository) FindByEhid(ehid string) (Entity, error) {
 	return response, nil
 }
 
-func (r *Repository) DeleteByEhid(ehid string) error {
+func (r *RepositoryImpl) DeleteByEhid(ehid string) error {
 	now := time.Now()
 	result := r.Config.Db.
 		Table(r.TableName).

@@ -9,13 +9,13 @@ import (
 type Service struct {
 	Config               *config.Config
 	CredentialRepository Repository
-	ProfileRepository    *profile.Repository
+	ProfileRepository    profile.Repository
 }
 
 func NewService(
 	cfg *config.Config,
 	cr Repository,
-	pr *profile.Repository,
+	pr profile.Repository,
 ) *Service {
 	return &Service{
 		Config:               cfg,
