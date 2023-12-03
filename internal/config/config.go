@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -26,7 +25,8 @@ func New(
 	configType string,
 	configPaths []string,
 ) (Config, error) {
-	viper.SetConfigName(ComposeConfigName(plainConfigName))
+	profile := DetermineProfile()
+	viper.SetConfigName(plainConfigName + "-" + profile)
 	viper.SetConfigType(configType)
 	for _, cp := range configPaths {
 		viper.AddConfigPath(cp)
@@ -47,6 +47,7 @@ func New(
 	defaultUserPassword := viper.GetString("app.security.default-user-password")
 
 	return Config{
+		Profile:             profile,
 		Db:                  db,
 		TokenAuth:           jwta,
 		JwtValidMinute:      jwtvm,
@@ -55,12 +56,12 @@ func New(
 	}, nil
 }
 
-func ComposeConfigName(plainConfigName string) string {
+func DetermineProfile() string {
 	profile := os.Getenv("APP_PROFILE")
 	if profile == "" {
 		profile = "local"
 	}
-	return fmt.Sprintf("%s-%s", plainConfigName, profile)
+	return profile
 }
 
 func CreateDb(configKey string) (*gorm.DB, error) {
