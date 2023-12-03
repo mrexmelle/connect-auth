@@ -76,9 +76,9 @@ func Serve(cmd *cobra.Command, args []string) {
 
 		r.Route("/credentials", func(r chi.Router) {
 			r.Post("/", credentialController.Post)
-			r.Delete("/{eid}", credentialController.Delete)
-			r.Patch("/{eid}/password", credentialController.PatchPassword)
-			r.Delete("/{eid}/password", credentialController.DeletePassword)
+			r.Delete("/{employee_id}", credentialController.Delete)
+			r.Patch("/{employee_id}/password", credentialController.PatchPassword)
+			r.Delete("/{employee_id}/password", credentialController.DeletePassword)
 		})
 
 		r.Route("/profiles", func(r chi.Router) {

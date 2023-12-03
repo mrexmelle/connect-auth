@@ -56,7 +56,7 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 // @Router /credentials/{eid} [DELETE]
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 
-	err := c.CredentialService.DeleteByEmployeeId(chi.URLParam(r, "eid"))
+	err := c.CredentialService.DeleteByEmployeeId(chi.URLParam(r, "employee_id"))
 
 	if err != nil {
 		http.Error(w, "DELETE failure: "+err.Error(), http.StatusInternalServerError)
@@ -83,7 +83,7 @@ func (c *Controller) PatchPassword(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&requestBody)
 
 	response, err := c.CredentialService.UpdatePasswordByEmployeeId(
-		chi.URLParam(r, "eid"),
+		chi.URLParam(r, "employee_id"),
 		requestBody)
 
 	if err != nil {
@@ -106,7 +106,7 @@ func (c *Controller) PatchPassword(w http.ResponseWriter, r *http.Request) {
 // @Failure 500 "InternalServerError"
 // @Router /credentials/{eid}/password [DELETE]
 func (c *Controller) DeletePassword(w http.ResponseWriter, r *http.Request) {
-	err := c.CredentialService.ResetPasswordByEmployeeId(chi.URLParam(r, "eid"))
+	err := c.CredentialService.ResetPasswordByEmployeeId(chi.URLParam(r, "employee_id"))
 
 	if err != nil {
 		http.Error(w, "DELETE failure: "+err.Error(), http.StatusInternalServerError)

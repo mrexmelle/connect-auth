@@ -8,13 +8,13 @@ import (
 
 type Service struct {
 	Config               *config.Config
-	CredentialRepository *Repository
+	CredentialRepository Repository
 	ProfileRepository    *profile.Repository
 }
 
 func NewService(
 	cfg *config.Config,
-	cr *Repository,
+	cr Repository,
 	pr *profile.Repository,
 ) *Service {
 	return &Service{

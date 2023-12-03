@@ -10,13 +10,13 @@ import (
 
 type Service struct {
 	Config               *config.Config
-	CredentialRepository *credential.Repository
+	CredentialRepository credential.Repository
 }
 
-func NewService(cfg *config.Config, repo *credential.Repository) *Service {
+func NewService(cfg *config.Config, cr credential.Repository) *Service {
 	return &Service{
 		Config:               cfg,
-		CredentialRepository: repo,
+		CredentialRepository: cr,
 	}
 }
 

@@ -7,19 +7,27 @@ import (
 	"gorm.io/gorm"
 )
 
-type Repository struct {
+type RepositoryImpl struct {
 	Config    *config.Config
 	TableName string
 }
 
-func NewRepository(cfg *config.Config) *Repository {
-	return &Repository{
+type Repository interface {
+	CreateWithDb(db *gorm.DB, employeeId string, password string) error
+	ExistsByEmployeeIdAndPassword(employeeId string, password string) (bool, error)
+	DeleteByEmployeeId(employeeId string) error
+	UpdatePasswordByEmployeeIdAndPassword(newPassword string, employeeId string, currentPassword string) error
+	ResetPasswordByEmployeeId(employeeId string) error
+}
+
+func NewRepository(cfg *config.Config) Repository {
+	return &RepositoryImpl{
 		Config:    cfg,
 		TableName: "credentials",
 	}
 }
 
-func (r *Repository) CreateWithDb(
+func (r *RepositoryImpl) CreateWithDb(
 	db *gorm.DB,
 	employeeId string,
 	password string,
@@ -34,7 +42,7 @@ func (r *Repository) CreateWithDb(
 	return res.Error
 }
 
-func (r *Repository) ExistsByEmployeeIdAndPassword(
+func (r *RepositoryImpl) ExistsByEmployeeIdAndPassword(
 	employeeId string,
 	password string,
 ) (bool, error) {
@@ -53,7 +61,7 @@ func (r *Repository) ExistsByEmployeeIdAndPassword(
 	return (idResult == employeeId), err
 }
 
-func (r *Repository) DeleteByEmployeeId(employeeId string) error {
+func (r *RepositoryImpl) DeleteByEmployeeId(employeeId string) error {
 	now := time.Now()
 	result := r.Config.Db.
 		Table(r.TableName).
@@ -70,7 +78,7 @@ func (r *Repository) DeleteByEmployeeId(employeeId string) error {
 	return nil
 }
 
-func (r *Repository) UpdatePasswordByEmployeeIdAndPassword(
+func (r *RepositoryImpl) UpdatePasswordByEmployeeIdAndPassword(
 	newPassword string,
 	employeeId string,
 	currentPassword string,
@@ -90,7 +98,7 @@ func (r *Repository) UpdatePasswordByEmployeeIdAndPassword(
 	return result.Error
 }
 
-func (r *Repository) ResetPasswordByEmployeeId(
+func (r *RepositoryImpl) ResetPasswordByEmployeeId(
 	employeeId string,
 ) error {
 	result := r.Config.Db.Exec(
