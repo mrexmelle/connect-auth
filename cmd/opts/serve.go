@@ -12,6 +12,8 @@ import (
 	"github.com/mrexmelle/connect-auth/internal/credential"
 	"github.com/mrexmelle/connect-auth/internal/profile"
 	"github.com/mrexmelle/connect-auth/internal/session"
+
+	httpSwagger "github.com/swaggo/http-swagger"
 	"go.uber.org/dig"
 )
 
@@ -64,15 +66,19 @@ func Serve(cmd *cobra.Command, args []string) {
 			MaxAge:           300, // Maximum value not ignored by any of major browsers
 		}))
 
+		if config.Profile == "local" {
+			r.Mount("/swagger", httpSwagger.WrapHandler)
+		}
+
 		r.Route("/sessions", func(r chi.Router) {
 			r.Post("/", sessionController.Post)
 		})
 
 		r.Route("/credentials", func(r chi.Router) {
 			r.Post("/", credentialController.Post)
-			r.Delete("/{ehid}", credentialController.Delete)
-			r.Patch("/{ehid}/password", credentialController.PatchPassword)
-			r.Delete("/{ehid}/password", credentialController.DeletePassword)
+			r.Delete("/{eid}", credentialController.Delete)
+			r.Patch("/{eid}/password", credentialController.PatchPassword)
+			r.Delete("/{eid}/password", credentialController.DeletePassword)
 		})
 
 		r.Route("/profiles", func(r chi.Router) {
