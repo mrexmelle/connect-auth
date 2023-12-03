@@ -20,6 +20,15 @@ func NewController(cfg *config.Config, svc *Service) *Controller {
 	}
 }
 
+// Post Credentials : HTTP endpoint to post new credentials
+// @Tags Credentials
+// @Description Post a new credential
+// @Accept json
+// @Produce json
+// @Param data body PostRequestDto true "Credential Request"
+// @Success 200 {object} ResponseDto "Success Response"
+// @Failure 500 "InternalServerError"
+// @Router /credentials [POST]
 func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	var requestBody PostRequestDto
 	json.NewDecoder(r.Body).Decode(&requestBody)
@@ -37,9 +46,17 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(responseBody))
 }
 
+// Delete Credentials : HTTP endpoint to delete credentials
+// @Tags Credentials
+// @Description Delete a credential
+// @Produce json
+// @Param eid path string true "Employee ID"
+// @Success 200 {object} ResponseDto "Success Response"
+// @Failure 500 "InternalServerError"
+// @Router /credentials/{eid} [DELETE]
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 
-	err := c.CredentialService.DeleteByEmployeeId(chi.URLParam(r, "ehid"))
+	err := c.CredentialService.DeleteByEmployeeId(chi.URLParam(r, "eid"))
 
 	if err != nil {
 		http.Error(w, "DELETE failure: "+err.Error(), http.StatusInternalServerError)
@@ -52,11 +69,22 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(responseBody))
 }
 
+// Patch Password : HTTP endpoint to patch password
+// @Tags Credentials
+// @Description Patch a credential's password
+// @Produce json
+// @Param eid path string true "Employee ID"
+// @Param data body PatchPasswordRequestDto true "Patch Password Request"
+// @Success 200 {object} ResponseDto "Success Response"
+// @Failure 500 "InternalServerError"
+// @Router /credentials/{eid}/password [PATCH]
 func (c *Controller) PatchPassword(w http.ResponseWriter, r *http.Request) {
 	var requestBody PatchPasswordRequestDto
 	json.NewDecoder(r.Body).Decode(&requestBody)
 
-	response, err := c.CredentialService.UpdatePassword(requestBody)
+	response, err := c.CredentialService.UpdatePasswordByEmployeeId(
+		chi.URLParam(r, "eid"),
+		requestBody)
 
 	if err != nil {
 		http.Error(w, "PATCH failure: "+err.Error(), http.StatusInternalServerError)
@@ -69,8 +97,16 @@ func (c *Controller) PatchPassword(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(responseBody))
 }
 
+// Reset Password : HTTP endpoint to reset password
+// @Tags Credentials
+// @Description Reset a credential's password
+// @Produce json
+// @Param eid path string true "Employee ID"
+// @Success 200 {object} ResponseDto "Success Response"
+// @Failure 500 "InternalServerError"
+// @Router /credentials/{eid}/password [DELETE]
 func (c *Controller) DeletePassword(w http.ResponseWriter, r *http.Request) {
-	err := c.CredentialService.ResetPassword(chi.URLParam(r, "ehid"))
+	err := c.CredentialService.ResetPasswordByEmployeeId(chi.URLParam(r, "eid"))
 
 	if err != nil {
 		http.Error(w, "DELETE failure: "+err.Error(), http.StatusInternalServerError)

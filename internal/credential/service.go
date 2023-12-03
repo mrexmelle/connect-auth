@@ -59,15 +59,18 @@ func (s *Service) Create(req PostRequestDto) (*ResponseDto, error) {
 	}, trx.Commit().Error
 }
 
-func (s *Service) UpdatePassword(req PatchPasswordRequestDto) (ResponseDto, error) {
+func (s *Service) UpdatePasswordByEmployeeId(
+	employeeId string,
+	req PatchPasswordRequestDto,
+) (ResponseDto, error) {
 	err := s.CredentialRepository.UpdatePasswordByEmployeeIdAndPassword(
-		req.NewPassword, req.EmployeeId, req.CurrentPassword)
+		req.NewPassword, employeeId, req.CurrentPassword)
 	return ResponseDto{
 		Status: mapper.ToStatus(err),
 	}, err
 }
 
-func (s *Service) ResetPassword(employeeId string) error {
+func (s *Service) ResetPasswordByEmployeeId(employeeId string) error {
 	return s.CredentialRepository.ResetPasswordByEmployeeId(employeeId)
 }
 

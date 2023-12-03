@@ -75,7 +75,7 @@ func (r *Repository) UpdatePasswordByEmployeeIdAndPassword(
 	employeeId string,
 	currentPassword string,
 ) error {
-	res := r.Config.Db.Exec(
+	result := r.Config.Db.Exec(
 		"UPDATE "+r.TableName+" SET "+
 			"password_hash = CRYPT(?, GEN_SALT('bf', 8)), "+
 			"updated_at = NOW() "+
@@ -84,16 +84,16 @@ func (r *Repository) UpdatePasswordByEmployeeIdAndPassword(
 		employeeId,
 		currentPassword,
 	)
-	if res.RowsAffected == 0 {
+	if result.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
 	}
-	return res.Error
+	return result.Error
 }
 
 func (r *Repository) ResetPasswordByEmployeeId(
 	employeeId string,
 ) error {
-	res := r.Config.Db.Exec(
+	result := r.Config.Db.Exec(
 		"UPDATE "+r.TableName+" SET "+
 			"password_hash = CRYPT(?, GEN_SALT('bf', 8)), "+
 			"updated_at = NOW() "+
@@ -101,8 +101,8 @@ func (r *Repository) ResetPasswordByEmployeeId(
 		r.Config.DefaultUserPassword,
 		employeeId,
 	)
-	if res.RowsAffected == 0 {
+	if result.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
 	}
-	return res.Error
+	return result.Error
 }

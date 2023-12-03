@@ -1,7 +1,6 @@
 package credential
 
 type PatchPasswordRequestDto struct {
-	EmployeeId      string `json:"employeeId"`
 	CurrentPassword string `json:"currentPassword"`
 	NewPassword     string `json:"newPassword"`
 }
