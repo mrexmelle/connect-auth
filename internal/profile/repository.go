@@ -18,14 +18,14 @@ type Repository interface {
 }
 
 type RepositoryImpl struct {
-	Config    *config.Config
-	TableName string
+	ConfigService *config.Service
+	TableName     string
 }
 
-func NewRepository(cfg *config.Config) Repository {
+func NewRepository(cfg *config.Service) Repository {
 	return &RepositoryImpl{
-		Config:    cfg,
-		TableName: "profiles",
+		ConfigService: cfg,
+		TableName:     "profiles",
 	}
 }
 
@@ -66,12 +66,14 @@ func (r *RepositoryImpl) UpdateByEhid(
 		ts, err := time.Parse("2006-01-02", dob)
 		if err == nil {
 			dbFields["dob"] = datatypes.Date(ts)
+		} else {
+			return err
 		}
 	}
 
 	if len(dbFields) > 0 {
 		dbFields["updated_at"] = time.Now()
-		result := r.Config.Db.
+		result := r.ConfigService.Db.
 			Table(r.TableName).
 			Where("ehid = ?", ehid).
 			Updates(dbFields)
@@ -93,7 +95,7 @@ func (r *RepositoryImpl) FindByEhid(ehid string) (Entity, error) {
 		Ehid: ehid,
 	}
 	var dob time.Time
-	err := r.Config.Db.
+	err := r.ConfigService.Db.
 		Select("employee_id, name, email_address, dob").
 		Table(r.TableName).
 		Where("ehid = ?", ehid).
@@ -109,7 +111,7 @@ func (r *RepositoryImpl) FindByEhid(ehid string) (Entity, error) {
 
 func (r *RepositoryImpl) DeleteByEhid(ehid string) error {
 	now := time.Now()
-	result := r.Config.Db.
+	result := r.ConfigService.Db.
 		Table(r.TableName).
 		Where("ehid = ?", ehid).
 		Updates(

@@ -16,14 +16,14 @@ type Repository interface {
 }
 
 type RepositoryImpl struct {
-	Config    *config.Config
-	TableName string
+	ConfigService *config.Service
+	TableName     string
 }
 
-func NewRepository(cfg *config.Config) Repository {
+func NewRepository(cfg *config.Service) Repository {
 	return &RepositoryImpl{
-		Config:    cfg,
-		TableName: "credentials",
+		ConfigService: cfg,
+		TableName:     "credentials",
 	}
 }
 
@@ -47,7 +47,7 @@ func (r *RepositoryImpl) ExistsByEmployeeIdAndPassword(
 	password string,
 ) (bool, error) {
 	var idResult string
-	err := r.Config.Db.
+	err := r.ConfigService.Db.
 		Select("employee_id").
 		Table(r.TableName).
 		Where(
@@ -63,7 +63,7 @@ func (r *RepositoryImpl) ExistsByEmployeeIdAndPassword(
 
 func (r *RepositoryImpl) DeleteByEmployeeId(employeeId string) error {
 	now := time.Now()
-	result := r.Config.Db.
+	result := r.ConfigService.Db.
 		Table(r.TableName).
 		Where("employee_id = ? AND deleted_at IS NULL", employeeId).
 		Updates(
@@ -83,7 +83,7 @@ func (r *RepositoryImpl) UpdatePasswordByEmployeeIdAndPassword(
 	employeeId string,
 	currentPassword string,
 ) error {
-	result := r.Config.Db.Exec(
+	result := r.ConfigService.Db.Exec(
 		"UPDATE "+r.TableName+" SET "+
 			"password_hash = CRYPT(?, GEN_SALT('bf', 8)), "+
 			"updated_at = NOW() "+
@@ -101,12 +101,12 @@ func (r *RepositoryImpl) UpdatePasswordByEmployeeIdAndPassword(
 func (r *RepositoryImpl) ResetPasswordByEmployeeId(
 	employeeId string,
 ) error {
-	result := r.Config.Db.Exec(
+	result := r.ConfigService.Db.Exec(
 		"UPDATE "+r.TableName+" SET "+
 			"password_hash = CRYPT(?, GEN_SALT('bf', 8)), "+
 			"updated_at = NOW() "+
 			"WHERE employee_id = ?",
-		r.Config.DefaultUserPassword,
+		r.ConfigService.GetDefaultUserPassword(),
 		employeeId,
 	)
 	if result.RowsAffected == 0 {

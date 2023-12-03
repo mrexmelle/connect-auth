@@ -7,25 +7,25 @@ import (
 )
 
 type Service struct {
-	Config               *config.Config
+	ConfigService        *config.Service
 	CredentialRepository Repository
 	ProfileRepository    profile.Repository
 }
 
 func NewService(
-	cfg *config.Config,
+	cfg *config.Service,
 	cr Repository,
 	pr profile.Repository,
 ) *Service {
 	return &Service{
-		Config:               cfg,
+		ConfigService:        cfg,
 		CredentialRepository: cr,
 		ProfileRepository:    pr,
 	}
 }
 
 func (s *Service) Create(req PostRequestDto) (*ResponseDto, error) {
-	trx := s.Config.Db.Begin()
+	trx := s.ConfigService.Db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			trx.Rollback()

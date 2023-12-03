@@ -2,20 +2,57 @@ basePath: /
 definitions:
   credential.PatchPasswordRequestDto:
     properties:
-      currentPassword:
+      current_password:
         type: string
-      newPassword:
+      new_password:
         type: string
     type: object
   credential.PostRequestDto:
     properties:
-      employeeId:
+      employee_id:
         type: string
       password:
         type: string
     type: object
   credential.ResponseDto:
     properties:
+      status:
+        type: string
+    type: object
+  profile.DeleteResponseDto:
+    properties:
+      status:
+        type: string
+    type: object
+  profile.Entity:
+    properties:
+      dob:
+        type: string
+      ehid:
+        type: string
+      email_address:
+        type: string
+      employee_id:
+        type: string
+      name:
+        type: string
+    type: object
+  profile.PatchRequestDto:
+    properties:
+      fields:
+        additionalProperties:
+          type: string
+        type: object
+    type: object
+  profile.PatchResponseDto:
+    properties:
+      status:
+        type: string
+    type: object
+  profile.ResponseDto:
+    properties:
+      profile:
+        $ref: '#/definitions/profile.Entity'
       status:
         type: string
     type: object
@@ -56,13 +93,13 @@ paths:
           description: InternalServerError
       tags:
       - Credentials
-  /credentials/{eid}:
+  /credentials/{employee_id}:
     delete:
       description: Delete a credential
       parameters:
       - description: Employee ID
         in: path
-        name: eid
+        name: employee_id
         required: true
         type: string
       produces:
@@ -76,13 +113,13 @@ paths:
           description: InternalServerError
       tags:
       - Credentials
-  /credentials/{eid}/password:
+  /credentials/{employee_id}/password:
     delete:
       description: Reset a credential's password
       parameters:
       - description: Employee ID
         in: path
-        name: eid
+        name: employee_id
         required: true
         type: string
       produces:
@@ -97,14 +134,16 @@ paths:
       tags:
       - Credentials
     patch:
+      consumes:
+      - application/json
       description: Patch a credential's password
       parameters:
       - description: Employee ID
         in: path
-        name: eid
+        name: employee_id
         required: true
         type: string
-      - description: Patch Password Request
+      - description: Password Patch Request
         in: body
         name: data
         required: true
@@ -121,4 +160,70 @@ paths:
           description: InternalServerError
       tags:
       - Credentials
+  /profiles/{ehid}:
+    delete:
+      description: Delete a profile
+      parameters:
+      - description: Employee Hash ID
+        in: path
+        name: ehid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/profile.DeleteResponseDto'
+        "500":
+          description: InternalServerError
+      tags:
+      - Profiles
+    get:
+      description: Get a profile
+      parameters:
+      - description: Employee Hash ID
+        in: path
+        name: ehid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/profile.ResponseDto'
+        "500":
+          description: InternalServerError
+      tags:
+      - Profiles
+    patch:
+      consumes:
+      - application/json
+      description: Patch a profile
+      parameters:
+      - description: Employee Hash ID
+        in: path
+        name: ehid
+        required: true
+        type: string
+      - description: Profile Patch Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/profile.PatchRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/profile.PatchResponseDto'
+        "500":
+          description: InternalServerError
+      tags:
+      - Profiles
 swagger: "2.0"

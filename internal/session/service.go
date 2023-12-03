@@ -9,13 +9,13 @@ import (
 )
 
 type Service struct {
-	Config               *config.Config
+	ConfigService        *config.Service
 	CredentialRepository credential.Repository
 }
 
-func NewService(cfg *config.Config, cr credential.Repository) *Service {
+func NewService(cfg *config.Service, cr credential.Repository) *Service {
 	return &Service{
-		Config:               cfg,
+		ConfigService:        cfg,
 		CredentialRepository: cr,
 	}
 }
@@ -30,9 +30,9 @@ func (s *Service) Authenticate(req RequestDto) (bool, error) {
 func (s *Service) GenerateJwt(employeeId string) (string, time.Time, error) {
 	now := time.Now()
 	exp := now.Add(
-		time.Minute * time.Duration(s.Config.JwtValidMinute),
+		time.Minute * time.Duration(s.ConfigService.GetJwtValidMinute()),
 	)
-	_, token, err := s.Config.TokenAuth.Encode(
+	_, token, err := s.ConfigService.TokenAuth.Encode(
 		map[string]interface{}{
 			"aud": "connect-web",
 			"exp": exp.Unix(),

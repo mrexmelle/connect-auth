@@ -57,7 +57,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/credentials/{eid}": {
+        "/credentials/{employee_id}": {
             "delete": {
                 "description": "Delete a credential",
                 "produces": [
@@ -70,7 +70,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Employee ID",
-                        "name": "eid",
+                        "name": "employee_id",
                         "in": "path",
                         "required": true
                     }
@@ -88,7 +88,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/credentials/{eid}/password": {
+        "/credentials/{employee_id}/password": {
             "delete": {
                 "description": "Reset a credential's password",
                 "produces": [
@@ -101,7 +101,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Employee ID",
-                        "name": "eid",
+                        "name": "employee_id",
                         "in": "path",
                         "required": true
                     }
@@ -120,6 +120,9 @@ const docTemplate = `{
             },
             "patch": {
                 "description": "Patch a credential's password",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -130,12 +133,12 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Employee ID",
-                        "name": "eid",
+                        "name": "employee_id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Patch Password Request",
+                        "description": "Password Patch Request",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -156,16 +159,117 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/profiles/{ehid}": {
+            "get": {
+                "description": "Get a profile",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profiles"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee Hash ID",
+                        "name": "ehid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/profile.ResponseDto"
+                        }
+                    },
+                    "500": {
+                        "description": "InternalServerError"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a profile",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profiles"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee Hash ID",
+                        "name": "ehid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/profile.DeleteResponseDto"
+                        }
+                    },
+                    "500": {
+                        "description": "InternalServerError"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Patch a profile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profiles"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee Hash ID",
+                        "name": "ehid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Profile Patch Request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/profile.PatchRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/profile.PatchResponseDto"
+                        }
+                    },
+                    "500": {
+                        "description": "InternalServerError"
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "credential.PatchPasswordRequestDto": {
             "type": "object",
             "properties": {
-                "currentPassword": {
+                "current_password": {
                     "type": "string"
                 },
-                "newPassword": {
+                "new_password": {
                     "type": "string"
                 }
             }
@@ -173,7 +277,7 @@ const docTemplate = `{
         "credential.PostRequestDto": {
             "type": "object",
             "properties": {
-                "employeeId": {
+                "employee_id": {
                     "type": "string"
                 },
                 "password": {
@@ -184,6 +288,64 @@ const docTemplate = `{
         "credential.ResponseDto": {
             "type": "object",
             "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "profile.DeleteResponseDto": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "profile.Entity": {
+            "type": "object",
+            "properties": {
+                "dob": {
+                    "type": "string"
+                },
+                "ehid": {
+                    "type": "string"
+                },
+                "email_address": {
+                    "type": "string"
+                },
+                "employee_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "profile.PatchRequestDto": {
+            "type": "object",
+            "properties": {
+                "fields": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "profile.PatchResponseDto": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "profile.ResponseDto": {
+            "type": "object",
+            "properties": {
+                "profile": {
+                    "$ref": "#/definitions/profile.Entity"
+                },
                 "status": {
                     "type": "string"
                 }

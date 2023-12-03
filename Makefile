@@ -2,21 +2,25 @@
 PROJECT_NAME=connect-auth
 VERSION=0.1.0
 IMAGE_NAME=ghcr.io/mrexmelle/$(PROJECT_NAME)
+GO_SOURCES=$(shell find . -name '*.go' -not -path "./vendor/*")
 
-$(PROJECT_NAME): 
-	go build -o $(PROJECT_NAME) cmd/*.go
+$(PROJECT_NAME): $(GO_SOURCES)
+	go build -o $@ ./cmd/main.go
 
 clean:
-	rm -f $(PROJECT_NAME)
+	rm -rf $(PROJECT_NAME)
 
 distclean:
-	rm -rf $(PROJECT_NAME) data
+	rm -rf $(PROJECT_NAME) data docs
 
 docker-image:
 	docker build -t $(IMAGE_NAME):$(VERSION) .
 
 docker-release:
 	docker push $(IMAGE_NAME):$(VERSION)
+
+docs:
+	swag init -g cmd/main.go
 
 test:
 	go test ./internal/...

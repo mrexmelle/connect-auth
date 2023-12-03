@@ -8,13 +8,13 @@ import (
 )
 
 type Controller struct {
-	Config         *config.Config
+	ConfigService  *config.Service
 	SessionService *Service
 }
 
-func NewController(cfg *config.Config, svc *Service) *Controller {
+func NewController(cfg *config.Service, svc *Service) *Controller {
 	return &Controller{
-		Config:         cfg,
+		ConfigService:  cfg,
 		SessionService: svc,
 	}
 }

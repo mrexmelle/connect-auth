@@ -17,31 +17,18 @@ import (
 	"go.uber.org/dig"
 )
 
-func NewConfig() *config.Config {
-	cfg, err := config.New(
-		"application", "yaml",
-		[]string{
-			"/etc/conf",
-			"./config",
-		},
-	)
-	if err != nil {
-		panic(err)
-	}
-	return &cfg
-}
-
 func EnableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
 func Serve(cmd *cobra.Command, args []string) {
 	container := dig.New()
-	container.Provide(NewConfig)
 
+	container.Provide(config.NewRepository)
 	container.Provide(credential.NewRepository)
 	container.Provide(profile.NewRepository)
 
+	container.Provide(config.NewService)
 	container.Provide(credential.NewService)
 	container.Provide(profile.NewService)
 	container.Provide(session.NewService)
@@ -54,7 +41,7 @@ func Serve(cmd *cobra.Command, args []string) {
 		credentialController *credential.Controller,
 		profileController *profile.Controller,
 		sessionController *session.Controller,
-		config *config.Config,
+		configService *config.Service,
 	) {
 		r := chi.NewRouter()
 
@@ -66,7 +53,7 @@ func Serve(cmd *cobra.Command, args []string) {
 			MaxAge:           300, // Maximum value not ignored by any of major browsers
 		}))
 
-		if config.Profile == "local" {
+		if configService.GetProfile() == "local" {
 			r.Mount("/swagger", httpSwagger.WrapHandler)
 		}
 
@@ -87,7 +74,7 @@ func Serve(cmd *cobra.Command, args []string) {
 			r.Delete("/{ehid}", profileController.Delete)
 		})
 
-		err := http.ListenAndServe(fmt.Sprintf(":%d", config.Port), r)
+		err := http.ListenAndServe(fmt.Sprintf(":%d", configService.GetPort()), r)
 
 		if err != nil {
 			panic(err)

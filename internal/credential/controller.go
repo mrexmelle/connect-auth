@@ -9,13 +9,13 @@ import (
 )
 
 type Controller struct {
-	Config            *config.Config
+	ConfigService     *config.Service
 	CredentialService *Service
 }
 
-func NewController(cfg *config.Config, svc *Service) *Controller {
+func NewController(cfg *config.Service, svc *Service) *Controller {
 	return &Controller{
-		Config:            cfg,
+		ConfigService:     cfg,
 		CredentialService: svc,
 	}
 }
@@ -50,10 +50,10 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 // @Tags Credentials
 // @Description Delete a credential
 // @Produce json
-// @Param eid path string true "Employee ID"
+// @Param employee_id path string true "Employee ID"
 // @Success 200 {object} ResponseDto "Success Response"
 // @Failure 500 "InternalServerError"
-// @Router /credentials/{eid} [DELETE]
+// @Router /credentials/{employee_id} [DELETE]
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 
 	err := c.CredentialService.DeleteByEmployeeId(chi.URLParam(r, "employee_id"))
@@ -72,12 +72,13 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 // Patch Password : HTTP endpoint to patch password
 // @Tags Credentials
 // @Description Patch a credential's password
+// @Accept json
 // @Produce json
-// @Param eid path string true "Employee ID"
-// @Param data body PatchPasswordRequestDto true "Patch Password Request"
+// @Param employee_id path string true "Employee ID"
+// @Param data body PatchPasswordRequestDto true "Password Patch Request"
 // @Success 200 {object} ResponseDto "Success Response"
 // @Failure 500 "InternalServerError"
-// @Router /credentials/{eid}/password [PATCH]
+// @Router /credentials/{employee_id}/password [PATCH]
 func (c *Controller) PatchPassword(w http.ResponseWriter, r *http.Request) {
 	var requestBody PatchPasswordRequestDto
 	json.NewDecoder(r.Body).Decode(&requestBody)
@@ -101,10 +102,10 @@ func (c *Controller) PatchPassword(w http.ResponseWriter, r *http.Request) {
 // @Tags Credentials
 // @Description Reset a credential's password
 // @Produce json
-// @Param eid path string true "Employee ID"
+// @Param employee_id path string true "Employee ID"
 // @Success 200 {object} ResponseDto "Success Response"
 // @Failure 500 "InternalServerError"
-// @Router /credentials/{eid}/password [DELETE]
+// @Router /credentials/{employee_id}/password [DELETE]
 func (c *Controller) DeletePassword(w http.ResponseWriter, r *http.Request) {
 	err := c.CredentialService.ResetPasswordByEmployeeId(chi.URLParam(r, "employee_id"))
 

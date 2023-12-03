@@ -1,7 +1,7 @@
 package session
 
 type RequestDto struct {
-	EmployeeId string `json:"employeeId"`
+	EmployeeId string `json:"employee_id"`
 	Password   string `json:"password"`
 }
 

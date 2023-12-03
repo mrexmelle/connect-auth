@@ -11,17 +11,25 @@ import (
 )
 
 type Controller struct {
-	Config         *config.Config
+	ConfigService  *config.Service
 	ProfileService *Service
 }
 
-func NewController(cfg *config.Config, svc *Service) *Controller {
+func NewController(cfg *config.Service, svc *Service) *Controller {
 	return &Controller{
-		Config:         cfg,
+		ConfigService:  cfg,
 		ProfileService: svc,
 	}
 }
 
+// Get Profiles : HTTP endpoint to get a profile
+// @Tags Profiles
+// @Description Get a profile
+// @Produce json
+// @Param ehid path string true "Employee Hash ID"
+// @Success 200 {object} ResponseDto "Success Response"
+// @Failure 500 "InternalServerError"
+// @Router /profiles/{ehid} [GET]
 func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 	response := c.ProfileService.RetrieveByEhid(
 		chi.URLParam(r, "ehid"),
@@ -38,6 +46,16 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(responseBody))
 }
 
+// Patch Profiles : HTTP endpoint to patch a profile
+// @Tags Profiles
+// @Description Patch a profile
+// @Accept json
+// @Produce json
+// @Param ehid path string true "Employee Hash ID"
+// @Param data body PatchRequestDto true "Profile Patch Request"
+// @Success 200 {object} PatchResponseDto "Success Response"
+// @Failure 500 "InternalServerError"
+// @Router /profiles/{ehid} [PATCH]
 func (c *Controller) Patch(w http.ResponseWriter, r *http.Request) {
 	var requestBody PatchRequestDto
 	json.NewDecoder(r.Body).Decode(&requestBody)
@@ -72,6 +90,14 @@ func (c *Controller) Patch(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(responseBody))
 }
 
+// Delete Profiles : HTTP endpoint to delete a profile
+// @Tags Profiles
+// @Description Delete a profile
+// @Produce json
+// @Param ehid path string true "Employee Hash ID"
+// @Success 200 {object} DeleteResponseDto "Success Response"
+// @Failure 500 "InternalServerError"
+// @Router /profiles/{ehid} [DELETE]
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	response := c.ProfileService.DeleteByEhid(chi.URLParam(r, "ehid"))
 
