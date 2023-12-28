@@ -11,15 +11,26 @@ import (
 
 type Service struct {
 	ConfigRepository Repository
-	Db               *gorm.DB
+	ReadDb           *gorm.DB
+	WriteDb          *gorm.DB
 	TokenAuth        *jwtauth.JWTAuth
 }
 
 func NewService(
 	cr Repository,
 ) *Service {
-	db, err := gorm.Open(
-		postgres.Open(strings.TrimSpace(cr.GetDsn())),
+	readDb, err := gorm.Open(
+		postgres.Open(strings.TrimSpace(cr.GetReadDsn())),
+		&gorm.Config{
+			Logger: logger.Default.LogMode(logger.Info),
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	writeDb, err := gorm.Open(
+		postgres.Open(strings.TrimSpace(cr.GetWriteDsn())),
 		&gorm.Config{
 			Logger: logger.Default.LogMode(logger.Info),
 		},
@@ -36,7 +47,8 @@ func NewService(
 
 	return &Service{
 		ConfigRepository: cr,
-		Db:               db,
+		ReadDb:           readDb,
+		WriteDb:          writeDb,
 		TokenAuth:        jwta,
 	}
 }

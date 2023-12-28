@@ -25,7 +25,7 @@ func NewService(
 }
 
 func (s *Service) Create(req PostRequestDto) (*ResponseDto, error) {
-	trx := s.ConfigService.Db.Begin()
+	trx := s.ConfigService.WriteDb.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			trx.Rollback()
