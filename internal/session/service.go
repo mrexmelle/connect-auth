@@ -37,7 +37,7 @@ func (s *Service) GenerateJwt(employeeId string) (string, time.Time, error) {
 			"aud": "connect-web",
 			"exp": exp.Unix(),
 			"iat": now.Unix(),
-			"iss": "connect-auth",
+			"iss": "connect-authx",
 			"sub": mapper.ToEhid(employeeId),
 		},
 	)

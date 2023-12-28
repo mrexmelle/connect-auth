@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mrexmelle/connect-auth/cmd/opts"
+	"github.com/mrexmelle/connect-authx/cmd/opts"
 	_ "github.com/mrexmelle/connect-authx/docs"
 )
 

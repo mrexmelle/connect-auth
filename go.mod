@@ -6,7 +6,6 @@ require (
 	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/cors v1.2.1
 	github.com/go-chi/jwtauth v1.2.0
-	github.com/mrexmelle/connect-auth v0.0.0-20231228123743-baf0485856e9
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
 	github.com/swaggo/http-swagger v1.3.4
