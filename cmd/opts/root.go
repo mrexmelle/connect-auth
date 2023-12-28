@@ -5,8 +5,8 @@ import (
 )
 
 var RootCmd = &cobra.Command{
-	Use:     "connect-auth",
-	Short:   "Connect Auth",
-	Long:    "Connect Auth - An authentication and authorization service for Connect",
+	Use:     "connect-authx",
+	Short:   "Connect Authx",
+	Long:    "Connect Authx - An authentication service for Connect",
 	Version: "0.1.0",
 }

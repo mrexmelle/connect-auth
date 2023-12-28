@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/mrexmelle/connect-auth/internal/config"
-	"github.com/mrexmelle/connect-auth/internal/mapper"
+	"github.com/mrexmelle/connect-authx/internal/config"
+	"github.com/mrexmelle/connect-authx/internal/mapper"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )

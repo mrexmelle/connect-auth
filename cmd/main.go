@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/mrexmelle/connect-auth/cmd/opts"
-	_ "github.com/mrexmelle/connect-auth/docs"
+	_ "github.com/mrexmelle/connect-authx/docs"
 )
 
-// @title           Connect Auth API
+// @title           Connect Authx API
 // @version         1.0
-// @description     Auth API for Connect.
+// @description     Authx API for Connect.
 
 // @contact.email  mrexmelle@gmail.com
 

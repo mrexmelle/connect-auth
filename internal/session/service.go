@@ -3,9 +3,9 @@ package session
 import (
 	"time"
 
-	"github.com/mrexmelle/connect-auth/internal/config"
-	"github.com/mrexmelle/connect-auth/internal/credential"
-	"github.com/mrexmelle/connect-auth/internal/mapper"
+	"github.com/mrexmelle/connect-authx/internal/config"
+	"github.com/mrexmelle/connect-authx/internal/credential"
+	"github.com/mrexmelle/connect-authx/internal/mapper"
 )
 
 type Service struct {

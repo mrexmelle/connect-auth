@@ -1,8 +1,8 @@
 package profile
 
 import (
-	"github.com/mrexmelle/connect-auth/internal/config"
-	"github.com/mrexmelle/connect-auth/internal/mapper"
+	"github.com/mrexmelle/connect-authx/internal/config"
+	"github.com/mrexmelle/connect-authx/internal/mapper"
 )
 
 type Service struct {

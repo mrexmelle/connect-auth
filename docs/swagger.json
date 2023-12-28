@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Auth API for Connect.",
-        "title": "Connect Auth API",
+        "description": "Authx API for Connect.",
+        "title": "Connect Authx API",
         "contact": {
             "email": "mrexmelle@gmail.com"
         },

@@ -8,10 +8,10 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
-	"github.com/mrexmelle/connect-auth/internal/config"
-	"github.com/mrexmelle/connect-auth/internal/credential"
-	"github.com/mrexmelle/connect-auth/internal/profile"
-	"github.com/mrexmelle/connect-auth/internal/session"
+	"github.com/mrexmelle/connect-authx/internal/config"
+	"github.com/mrexmelle/connect-authx/internal/credential"
+	"github.com/mrexmelle/connect-authx/internal/profile"
+	"github.com/mrexmelle/connect-authx/internal/session"
 
 	httpSwagger "github.com/swaggo/http-swagger"
 	"go.uber.org/dig"

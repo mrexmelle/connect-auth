@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/mrexmelle/connect-auth/internal/config"
+	"github.com/mrexmelle/connect-authx/internal/config"
 )
 
 type Controller struct {

@@ -2,9 +2,9 @@ app:
   datasource:
     host: 127.0.0.1
     port: 5432
-    user: auth
-    password: auth123
-    dbname: auth
+    user: authx
+    password: authx123
+    dbname: authx
     sslmode: disable
     timezone: Asia/Jakarta
   security:

@@ -63,11 +63,11 @@ host: localhost:8080
 info:
   contact:
     email: mrexmelle@gmail.com
-  description: Auth API for Connect.
+  description: Authx API for Connect.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: Connect Auth API
+  title: Connect Authx API
   version: "1.0"
 paths:
   /credentials:

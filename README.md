@@ -1,4 +1,4 @@
-# connect-auth
+# connect-authx
 
 ## Compiling
 
@@ -33,7 +33,7 @@ $ docker run \
 	-e POSTGRES_PASSWORD=123 \
 	--restart always \
 	postgres:15-alpine
-$ ./connect-auth serve
+$ ./connect-authx serve
 ```
 
 ### For docker environment

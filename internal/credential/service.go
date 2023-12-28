@@ -1,9 +1,9 @@
 package credential
 
 import (
-	"github.com/mrexmelle/connect-auth/internal/config"
-	"github.com/mrexmelle/connect-auth/internal/mapper"
-	"github.com/mrexmelle/connect-auth/internal/profile"
+	"github.com/mrexmelle/connect-authx/internal/config"
+	"github.com/mrexmelle/connect-authx/internal/mapper"
+	"github.com/mrexmelle/connect-authx/internal/profile"
 )
 
 type Service struct {

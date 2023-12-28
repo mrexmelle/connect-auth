@@ -3,7 +3,7 @@ package credential
 import (
 	"time"
 
-	"github.com/mrexmelle/connect-auth/internal/config"
+	"github.com/mrexmelle/connect-authx/internal/config"
 	"gorm.io/gorm"
 )
 
