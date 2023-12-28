@@ -8,7 +8,8 @@ import (
 
 type Repository interface {
 	GetProfile() string
-	GetDsn() string
+	GetReadDsn() string
+	GetWriteDsn() string
 	GetJwtSecret() string
 	GetJwtValidMinute() int
 	GetPort() int
@@ -17,7 +18,8 @@ type Repository interface {
 
 type RepositoryImpl struct {
 	Profile             string
-	Dsn                 string
+	ReadDsn             string
+	WriteDsn            string
 	JwtSecret           string
 	JwtValidMinute      int
 	Port                int
@@ -42,9 +44,14 @@ func NewRepository() Repository {
 		panic(err)
 	}
 
-	var dsn = ""
-	for key, value := range viper.GetStringMapString("app.datasource") {
-		dsn += string(key + "=" + value + " ")
+	var readDsn = ""
+	for key, value := range viper.GetStringMapString("app.datasource.read") {
+		readDsn += string(key + "=" + value + " ")
+	}
+
+	var writeDsn = ""
+	for key, value := range viper.GetStringMapString("app.datasource.write") {
+		writeDsn += string(key + "=" + value + " ")
 	}
 
 	jwtSecret := viper.GetString("app.security.jwt.secret")
@@ -54,7 +61,8 @@ func NewRepository() Repository {
 
 	return &RepositoryImpl{
 		Profile:             profile,
-		Dsn:                 dsn,
+		ReadDsn:             readDsn,
+		WriteDsn:            writeDsn,
 		JwtSecret:           jwtSecret,
 		JwtValidMinute:      jwtValidMinute,
 		Port:                port,
@@ -66,8 +74,12 @@ func (r *RepositoryImpl) GetProfile() string {
 	return r.Profile
 }
 
-func (r *RepositoryImpl) GetDsn() string {
-	return r.Dsn
+func (r *RepositoryImpl) GetReadDsn() string {
+	return r.ReadDsn
+}
+
+func (r *RepositoryImpl) GetWriteDsn() string {
+	return r.WriteDsn
 }
 
 func (r *RepositoryImpl) GetJwtSecret() string {

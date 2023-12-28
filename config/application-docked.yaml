@@ -1,12 +1,21 @@
 app:
   datasource:
-    host: db
-    port: 5432
-    user: authx
-    password: authx123
-    dbname: authx
-    sslmode: disable
-    timezone: Asia/Jakarta
+    read:
+      host: db
+      port: 5432
+      user: authx_r
+      password: 123
+      dbname: authx
+      sslmode: disable
+      timezone: Asia/Jakarta
+    write:
+      host: db
+      port: 5432
+      user: authx_w
+      password: 123
+      dbname: authx
+      sslmode: disable
+      timezone: Asia/Jakarta
   security:
     jwt:
       secret: 1nt3rst3ll4r-*-a5tR0

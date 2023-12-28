@@ -47,7 +47,7 @@ func (r *RepositoryImpl) ExistsByEmployeeIdAndPassword(
 	password string,
 ) (bool, error) {
 	var idResult string
-	err := r.ConfigService.Db.
+	err := r.ConfigService.ReadDb.
 		Select("employee_id").
 		Table(r.TableName).
 		Where(
@@ -63,7 +63,7 @@ func (r *RepositoryImpl) ExistsByEmployeeIdAndPassword(
 
 func (r *RepositoryImpl) DeleteByEmployeeId(employeeId string) error {
 	now := time.Now()
-	result := r.ConfigService.Db.
+	result := r.ConfigService.WriteDb.
 		Table(r.TableName).
 		Where("employee_id = ? AND deleted_at IS NULL", employeeId).
 		Updates(
@@ -83,7 +83,7 @@ func (r *RepositoryImpl) UpdatePasswordByEmployeeIdAndPassword(
 	employeeId string,
 	currentPassword string,
 ) error {
-	result := r.ConfigService.Db.Exec(
+	result := r.ConfigService.WriteDb.Exec(
 		"UPDATE "+r.TableName+" SET "+
 			"password_hash = CRYPT(?, GEN_SALT('bf', 8)), "+
 			"updated_at = NOW() "+
@@ -101,7 +101,7 @@ func (r *RepositoryImpl) UpdatePasswordByEmployeeIdAndPassword(
 func (r *RepositoryImpl) ResetPasswordByEmployeeId(
 	employeeId string,
 ) error {
-	result := r.ConfigService.Db.Exec(
+	result := r.ConfigService.WriteDb.Exec(
 		"UPDATE "+r.TableName+" SET "+
 			"password_hash = CRYPT(?, GEN_SALT('bf', 8)), "+
 			"updated_at = NOW() "+

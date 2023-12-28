@@ -73,7 +73,7 @@ func (r *RepositoryImpl) UpdateByEhid(
 
 	if len(dbFields) > 0 {
 		dbFields["updated_at"] = time.Now()
-		result := r.ConfigService.Db.
+		result := r.ConfigService.WriteDb.
 			Table(r.TableName).
 			Where("ehid = ?", ehid).
 			Updates(dbFields)
@@ -95,7 +95,7 @@ func (r *RepositoryImpl) FindByEhid(ehid string) (Entity, error) {
 		Ehid: ehid,
 	}
 	var dob time.Time
-	err := r.ConfigService.Db.
+	err := r.ConfigService.ReadDb.
 		Select("employee_id, name, email_address, dob").
 		Table(r.TableName).
 		Where("ehid = ?", ehid).
@@ -111,7 +111,7 @@ func (r *RepositoryImpl) FindByEhid(ehid string) (Entity, error) {
 
 func (r *RepositoryImpl) DeleteByEhid(ehid string) error {
 	now := time.Now()
-	result := r.ConfigService.Db.
+	result := r.ConfigService.WriteDb.
 		Table(r.TableName).
 		Where("ehid = ?", ehid).
 		Updates(
