@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"database/sql"
 	"errors"
 	"time"
 
@@ -94,7 +95,7 @@ func (r *RepositoryImpl) FindByEhid(ehid string) (Entity, error) {
 	response := Entity{
 		Ehid: ehid,
 	}
-	var dob time.Time
+	var dob sql.NullTime
 	err := r.ConfigService.ReadDb.
 		Select("employee_id, name, email_address, dob").
 		Table(r.TableName).
@@ -105,7 +106,12 @@ func (r *RepositoryImpl) FindByEhid(ehid string) (Entity, error) {
 		return Entity{}, err
 	}
 
-	response.Dob = dob.Format("2006-01-02")
+	if dob.Valid {
+		response.Dob = dob.Time.Format("2006-01-02")
+	} else {
+		response.Dob = ""
+	}
+
 	return response, nil
 }
 
