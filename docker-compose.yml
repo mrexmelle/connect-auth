@@ -7,3 +7,10 @@ services:
       - APP_PROFILE=docked
     ports:
       - '8080:8080'
+    networks:
+      - connect_proxy_network
+
+networks:
+  connect_proxy_network:
+      name: connect-network
+      external: true
