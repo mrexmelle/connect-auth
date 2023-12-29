@@ -13,10 +13,10 @@ clean:
 distclean:
 	rm -rf $(PROJECT_NAME) data docs
 
-docker-image:
+docker-build:
 	docker build -t $(IMAGE_NAME):$(VERSION) .
 
-docker-release:
+docker-push:
 	docker push $(IMAGE_NAME):$(VERSION)
 
 docs:

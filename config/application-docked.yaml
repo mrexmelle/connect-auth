@@ -1,7 +1,7 @@
 app:
   datasource:
     read:
-      host: db
+      host: postgres
       port: 5432
       user: authx_r
       password: 123
@@ -9,7 +9,7 @@ app:
       sslmode: disable
       timezone: Asia/Jakarta
     write:
-      host: db
+      host: postgres
       port: 5432
       user: authx_w
       password: 123
