@@ -14,4 +14,4 @@ RUN rm -rf ./cmd ./internal go
 EXPOSE 8080
 CMD ["/app/connect-authx", "serve"]
 
-LABEL org.opencontainers.image.source https://github.com/OWNER/REPO
+LABEL org.opencontainers.image.source https://github.com/mrexmelle/connect-authx
