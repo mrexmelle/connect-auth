@@ -19,6 +19,16 @@ func NewController(cfg *config.Service, svc *Service) *Controller {
 	}
 }
 
+// Post Sessions : HTTP endpoint to post new sessions
+// @Tags Sessions
+// @Description Post a new session
+// @Accept json
+// @Produce json
+// @Param data body RequestDto true "Session Request"
+// @Success 200 {object} ResponseDto "Success Response"
+// @Failure 500 "InternalServerError"
+// @Failure 401 "Unauthorized"
+// @Router /sessions [POST]
 func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	var requestBody RequestDto
 	json.NewDecoder(r.Body).Decode(&requestBody)

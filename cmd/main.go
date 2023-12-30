@@ -6,7 +6,7 @@ import (
 )
 
 // @title           Connect Authx API
-// @version         0.1.0
+// @version         0.1.1
 // @description     Authx API for Connect.
 
 // @contact.email  mrexmelle@gmail.com

@@ -56,6 +56,18 @@ definitions:
       status:
         type: string
     type: object
+  session.RequestDto:
+    properties:
+      employee_id:
+        type: string
+      password:
+        type: string
+    type: object
+  session.ResponseDto:
+    properties:
+      token:
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -68,7 +80,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: Connect Authx API
-  version: 0.1.0
+  version: 0.1.1
 paths:
   /credentials:
     post:
@@ -226,4 +238,29 @@ paths:
           description: InternalServerError
       tags:
       - Profiles
+  /sessions:
+    post:
+      consumes:
+      - application/json
+      description: Post a new session
+      parameters:
+      - description: Session Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/session.RequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/session.ResponseDto'
+        "401":
+          description: Unauthorized
+        "500":
+          description: InternalServerError
+      tags:
+      - Sessions
 swagger: "2.0"

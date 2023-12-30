@@ -1,6 +1,6 @@
 
 PROJECT_NAME=connect-authx
-VERSION=0.1.0
+VERSION=0.1.1
 IMAGE_NAME=ghcr.io/mrexmelle/$(PROJECT_NAME)
 GO_SOURCES=$(shell find . -name '*.go' -not -path "./vendor/*")
 
@@ -11,7 +11,7 @@ clean:
 	rm -rf $(PROJECT_NAME)
 
 distclean:
-	rm -rf $(PROJECT_NAME) data docs
+	rm -rf $(PROJECT_NAME) docs
 
 docker-build:
 	docker build -t $(IMAGE_NAME):$(VERSION) .

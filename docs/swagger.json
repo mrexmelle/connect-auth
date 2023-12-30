@@ -10,7 +10,7 @@
             "name": "Apache 2.0",
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        "version": "0.1.0"
+        "version": "0.1.1"
     },
     "host": "localhost:8080",
     "basePath": "/",
@@ -254,6 +254,45 @@
                     }
                 }
             }
+        },
+        "/sessions": {
+            "post": {
+                "description": "Post a new session",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Sessions"
+                ],
+                "parameters": [
+                    {
+                        "description": "Session Request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/session.RequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/session.ResponseDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "InternalServerError"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -341,6 +380,25 @@
                     "$ref": "#/definitions/profile.Entity"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "session.RequestDto": {
+            "type": "object",
+            "properties": {
+                "employee_id": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "session.ResponseDto": {
+            "type": "object",
+            "properties": {
+                "token": {
                     "type": "string"
                 }
             }
