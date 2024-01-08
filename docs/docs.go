@@ -40,7 +40,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/credential.PostRequestDto"
+                            "$ref": "#/definitions/internal_credential.PostRequestDto"
                         }
                     }
                 ],
@@ -48,8 +48,11 @@ const docTemplate = `{
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/credential.ResponseDto"
+                            "$ref": "#/definitions/internal_credential.PostResponseDto"
                         }
+                    },
+                    "400": {
+                        "description": "BadRequest"
                     },
                     "500": {
                         "description": "InternalServerError"
@@ -79,8 +82,11 @@ const docTemplate = `{
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/credential.ResponseDto"
+                            "$ref": "#/definitions/internal_credential.DeleteResponseDto"
                         }
+                    },
+                    "400": {
+                        "description": "BadRequest"
                     },
                     "500": {
                         "description": "InternalServerError"
@@ -110,8 +116,11 @@ const docTemplate = `{
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/credential.ResponseDto"
+                            "$ref": "#/definitions/internal_credential.PatchPasswordResponseDto"
                         }
+                    },
+                    "400": {
+                        "description": "BadRequest"
                     },
                     "500": {
                         "description": "InternalServerError"
@@ -143,7 +152,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/credential.PatchPasswordRequestDto"
+                            "$ref": "#/definitions/internal_credential.PatchPasswordRequestDto"
                         }
                     }
                 ],
@@ -151,8 +160,11 @@ const docTemplate = `{
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/credential.ResponseDto"
+                            "$ref": "#/definitions/internal_credential.PatchPasswordResponseDto"
                         }
+                    },
+                    "400": {
+                        "description": "BadRequest"
                     },
                     "500": {
                         "description": "InternalServerError"
@@ -182,8 +194,11 @@ const docTemplate = `{
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/profile.ResponseDto"
+                            "$ref": "#/definitions/internal_profile.GetResponseDto"
                         }
+                    },
+                    "400": {
+                        "description": "BadRequest"
                     },
                     "500": {
                         "description": "InternalServerError"
@@ -211,8 +226,11 @@ const docTemplate = `{
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/profile.DeleteResponseDto"
+                            "$ref": "#/definitions/internal_profile.DeleteResponseDto"
                         }
+                    },
+                    "400": {
+                        "description": "BadRequest"
                     },
                     "500": {
                         "description": "InternalServerError"
@@ -244,7 +262,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/profile.PatchRequestDto"
+                            "$ref": "#/definitions/internal_profile.PatchRequestDto"
                         }
                     }
                 ],
@@ -252,8 +270,11 @@ const docTemplate = `{
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/profile.PatchResponseDto"
+                            "$ref": "#/definitions/internal_profile.PatchResponseDto"
                         }
+                    },
+                    "400": {
+                        "description": "BadRequest"
                     },
                     "500": {
                         "description": "InternalServerError"
@@ -280,7 +301,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/session.RequestDto"
+                            "$ref": "#/definitions/internal_session.PostRequestDto"
                         }
                     }
                 ],
@@ -288,8 +309,11 @@ const docTemplate = `{
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/session.ResponseDto"
+                            "$ref": "#/definitions/internal_session.PostResponseDto"
                         }
+                    },
+                    "400": {
+                        "description": "BadRequest"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -302,7 +326,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "credential.PatchPasswordRequestDto": {
+        "github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_credential.DeleteResponseDto": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                }
+            }
+        },
+        "internal_credential.PatchPasswordRequestDto": {
             "type": "object",
             "properties": {
                 "current_password": {
@@ -313,7 +356,15 @@ const docTemplate = `{
                 }
             }
         },
-        "credential.PostRequestDto": {
+        "internal_credential.PatchPasswordResponseDto": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                }
+            }
+        },
+        "internal_credential.PostRequestDto": {
             "type": "object",
             "properties": {
                 "employee_id": {
@@ -324,23 +375,23 @@ const docTemplate = `{
                 }
             }
         },
-        "credential.ResponseDto": {
+        "internal_credential.PostResponseDto": {
             "type": "object",
             "properties": {
-                "status": {
-                    "type": "string"
+                "error": {
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
                 }
             }
         },
-        "profile.DeleteResponseDto": {
+        "internal_profile.DeleteResponseDto": {
             "type": "object",
             "properties": {
-                "status": {
-                    "type": "string"
+                "error": {
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
                 }
             }
         },
-        "profile.Entity": {
+        "internal_profile.Entity": {
             "type": "object",
             "properties": {
                 "dob": {
@@ -360,7 +411,18 @@ const docTemplate = `{
                 }
             }
         },
-        "profile.PatchRequestDto": {
+        "internal_profile.GetResponseDto": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/internal_profile.Entity"
+                },
+                "error": {
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                }
+            }
+        },
+        "internal_profile.PatchRequestDto": {
             "type": "object",
             "properties": {
                 "fields": {
@@ -371,26 +433,15 @@ const docTemplate = `{
                 }
             }
         },
-        "profile.PatchResponseDto": {
+        "internal_profile.PatchResponseDto": {
             "type": "object",
             "properties": {
-                "status": {
-                    "type": "string"
+                "error": {
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
                 }
             }
         },
-        "profile.ResponseDto": {
-            "type": "object",
-            "properties": {
-                "profile": {
-                    "$ref": "#/definitions/profile.Entity"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "session.RequestDto": {
+        "internal_session.PostRequestDto": {
             "type": "object",
             "properties": {
                 "employee_id": {
@@ -401,9 +452,23 @@ const docTemplate = `{
                 }
             }
         },
-        "session.ResponseDto": {
+        "internal_session.PostResponseDto": {
             "type": "object",
             "properties": {
+                "data": {
+                    "$ref": "#/definitions/internal_session.SigningResult"
+                },
+                "error": {
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                }
+            }
+        },
+        "internal_session.SigningResult": {
+            "type": "object",
+            "properties": {
+                "expires": {
+                    "type": "string"
+                },
                 "token": {
                     "type": "string"
                 }
@@ -418,12 +483,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "0.1.1",
+	Version:          "0.2.0",
 	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Connect Authx API",
-	Description:      "Authx API for Connect.",
+	Title:            "Connect Authentication API",
+	Description:      "Authentication API for Connect.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
