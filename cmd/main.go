@@ -5,9 +5,9 @@ import (
 	_ "github.com/mrexmelle/connect-authx/docs"
 )
 
-// @title           Connect Authx API
-// @version         0.1.1
-// @description     Authx API for Connect.
+// @title           Connect Authentication API
+// @version         0.2.0
+// @description     Authentication API for Connect.
 
 // @contact.email  mrexmelle@gmail.com
 

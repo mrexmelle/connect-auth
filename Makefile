@@ -1,6 +1,6 @@
 
 PROJECT_NAME=connect-authx
-VERSION=0.1.1
+VERSION=0.2.0
 IMAGE_NAME=ghcr.io/mrexmelle/$(PROJECT_NAME)
 GO_SOURCES=$(shell find . -name '*.go' -not -path "./vendor/*")
 
@@ -20,7 +20,7 @@ docker-push:
 	docker push $(IMAGE_NAME):$(VERSION)
 
 docs:
-	swag init -g cmd/main.go
+	swag init --parseDependency -g cmd/main.go
 
 test:
 	go test ./internal/...
