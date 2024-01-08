@@ -1,30 +1,47 @@
 basePath: /
 definitions:
-  credential.PatchPasswordRequestDto:
+  github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  internal_credential.DeleteResponseDto:
+    properties:
+      error:
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+    type: object
+  internal_credential.PatchPasswordRequestDto:
     properties:
       current_password:
         type: string
       new_password:
         type: string
     type: object
-  credential.PostRequestDto:
+  internal_credential.PatchPasswordResponseDto:
+    properties:
+      error:
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+    type: object
+  internal_credential.PostRequestDto:
     properties:
       employee_id:
         type: string
       password:
         type: string
     type: object
-  credential.ResponseDto:
+  internal_credential.PostResponseDto:
     properties:
-      status:
-        type: string
+      error:
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
     type: object
-  profile.DeleteResponseDto:
+  internal_profile.DeleteResponseDto:
     properties:
-      status:
-        type: string
+      error:
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
     type: object
-  profile.Entity:
+  internal_profile.Entity:
     properties:
       dob:
         type: string
@@ -37,34 +54,43 @@ definitions:
       name:
         type: string
     type: object
-  profile.PatchRequestDto:
+  internal_profile.GetResponseDto:
+    properties:
+      data:
+        $ref: '#/definitions/internal_profile.Entity'
+      error:
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+    type: object
+  internal_profile.PatchRequestDto:
     properties:
       fields:
         additionalProperties:
           type: string
         type: object
     type: object
-  profile.PatchResponseDto:
+  internal_profile.PatchResponseDto:
     properties:
-      status:
-        type: string
+      error:
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
     type: object
-  profile.ResponseDto:
-    properties:
-      profile:
-        $ref: '#/definitions/profile.Entity'
-      status:
-        type: string
-    type: object
-  session.RequestDto:
+  internal_session.PostRequestDto:
     properties:
       employee_id:
         type: string
       password:
         type: string
     type: object
-  session.ResponseDto:
+  internal_session.PostResponseDto:
     properties:
+      data:
+        $ref: '#/definitions/internal_session.SigningResult'
+      error:
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+    type: object
+  internal_session.SigningResult:
+    properties:
+      expires:
+        type: string
       token:
         type: string
     type: object
@@ -75,12 +101,12 @@ host: localhost:8080
 info:
   contact:
     email: mrexmelle@gmail.com
-  description: Authx API for Connect.
+  description: Authentication API for Connect.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: Connect Authx API
-  version: 0.1.1
+  title: Connect Authentication API
+  version: 0.2.0
 paths:
   /credentials:
     post:
@@ -93,14 +119,16 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/credential.PostRequestDto'
+          $ref: '#/definitions/internal_credential.PostRequestDto'
       produces:
       - application/json
       responses:
         "200":
           description: Success Response
           schema:
-            $ref: '#/definitions/credential.ResponseDto'
+            $ref: '#/definitions/internal_credential.PostResponseDto'
+        "400":
+          description: BadRequest
         "500":
           description: InternalServerError
       tags:
@@ -120,7 +148,9 @@ paths:
         "200":
           description: Success Response
           schema:
-            $ref: '#/definitions/credential.ResponseDto'
+            $ref: '#/definitions/internal_credential.DeleteResponseDto'
+        "400":
+          description: BadRequest
         "500":
           description: InternalServerError
       tags:
@@ -140,7 +170,9 @@ paths:
         "200":
           description: Success Response
           schema:
-            $ref: '#/definitions/credential.ResponseDto'
+            $ref: '#/definitions/internal_credential.PatchPasswordResponseDto'
+        "400":
+          description: BadRequest
         "500":
           description: InternalServerError
       tags:
@@ -160,14 +192,16 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/credential.PatchPasswordRequestDto'
+          $ref: '#/definitions/internal_credential.PatchPasswordRequestDto'
       produces:
       - application/json
       responses:
         "200":
           description: Success Response
           schema:
-            $ref: '#/definitions/credential.ResponseDto'
+            $ref: '#/definitions/internal_credential.PatchPasswordResponseDto'
+        "400":
+          description: BadRequest
         "500":
           description: InternalServerError
       tags:
@@ -187,7 +221,9 @@ paths:
         "200":
           description: Success Response
           schema:
-            $ref: '#/definitions/profile.DeleteResponseDto'
+            $ref: '#/definitions/internal_profile.DeleteResponseDto'
+        "400":
+          description: BadRequest
         "500":
           description: InternalServerError
       tags:
@@ -206,7 +242,9 @@ paths:
         "200":
           description: Success Response
           schema:
-            $ref: '#/definitions/profile.ResponseDto'
+            $ref: '#/definitions/internal_profile.GetResponseDto'
+        "400":
+          description: BadRequest
         "500":
           description: InternalServerError
       tags:
@@ -226,14 +264,16 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/profile.PatchRequestDto'
+          $ref: '#/definitions/internal_profile.PatchRequestDto'
       produces:
       - application/json
       responses:
         "200":
           description: Success Response
           schema:
-            $ref: '#/definitions/profile.PatchResponseDto'
+            $ref: '#/definitions/internal_profile.PatchResponseDto'
+        "400":
+          description: BadRequest
         "500":
           description: InternalServerError
       tags:
@@ -249,14 +289,16 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/session.RequestDto'
+          $ref: '#/definitions/internal_session.PostRequestDto'
       produces:
       - application/json
       responses:
         "200":
           description: Success Response
           schema:
-            $ref: '#/definitions/session.ResponseDto'
+            $ref: '#/definitions/internal_session.PostResponseDto'
+        "400":
+          description: BadRequest
         "401":
           description: Unauthorized
         "500":
