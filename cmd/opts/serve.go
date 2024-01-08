@@ -11,6 +11,7 @@ import (
 	"github.com/mrexmelle/connect-authx/internal/config"
 	"github.com/mrexmelle/connect-authx/internal/credential"
 	"github.com/mrexmelle/connect-authx/internal/profile"
+	"github.com/mrexmelle/connect-authx/internal/security"
 	"github.com/mrexmelle/connect-authx/internal/session"
 
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -31,6 +32,7 @@ func Serve(cmd *cobra.Command, args []string) {
 	container.Provide(config.NewService)
 	container.Provide(credential.NewService)
 	container.Provide(profile.NewService)
+	container.Provide(security.NewService)
 	container.Provide(session.NewService)
 
 	container.Provide(credential.NewController)
@@ -54,7 +56,12 @@ func Serve(cmd *cobra.Command, args []string) {
 		}))
 
 		if configService.GetProfile() == "local" {
-			r.Mount("/swagger", httpSwagger.WrapHandler)
+			r.Mount("/swagger", httpSwagger.Handler(
+				httpSwagger.URL(fmt.Sprintf("http://localhost:%d/swagger/doc.json", configService.GetPort())),
+				httpSwagger.UIConfig(map[string]string{
+					"defaultModelsExpandDepth": "-1",
+				}),
+			))
 		}
 
 		r.Route("/sessions", func(r chi.Router) {
@@ -88,6 +95,6 @@ func Serve(cmd *cobra.Command, args []string) {
 
 var ServeCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "Start Connect Auth server",
+	Short: "Start connect-authx server",
 	Run:   Serve,
 }
