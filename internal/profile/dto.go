@@ -1,18 +1,11 @@
 package profile
 
-type ResponseDto struct {
-	Profile Entity `json:"profile"`
-	Status  string `json:"status"`
-}
+import "github.com/mrexmelle/connect-authx/internal/dtoresponse"
 
 type PatchRequestDto struct {
 	Fields map[string]string `json:"fields"`
 }
 
-type PatchResponseDto struct {
-	Status string `json:"status"`
-}
-
-type DeleteResponseDto struct {
-	Status string `json:"status"`
-}
+type GetResponseDto = dtoresponse.HttpResponseWithData[Entity]
+type PatchResponseDto = dtoresponse.HttpResponseWithoutData
+type DeleteResponseDto = dtoresponse.HttpResponseWithoutData

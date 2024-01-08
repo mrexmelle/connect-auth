@@ -2,19 +2,17 @@ package profile
 
 import (
 	"database/sql"
-	"errors"
 	"time"
 
 	"github.com/mrexmelle/connect-authx/internal/config"
-	"github.com/mrexmelle/connect-authx/internal/mapper"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
 type Repository interface {
-	PrepareWithDb(db *gorm.DB, employeeId string) error
+	CreateWithDb(db *gorm.DB, employeeId string, ehid string) error
 	UpdateByEhid(fields map[string]string, ehid string) error
-	FindByEhid(ehid string) (Entity, error)
+	FindByEhid(ehid string) (*Entity, error)
 	DeleteByEhid(ehid string) error
 }
 
@@ -30,15 +28,16 @@ func NewRepository(cfg *config.Service) Repository {
 	}
 }
 
-func (r *RepositoryImpl) PrepareWithDb(
+func (r *RepositoryImpl) CreateWithDb(
 	db *gorm.DB,
 	employeeId string,
+	ehid string,
 ) error {
 	res := db.Exec(
 		"INSERT INTO "+r.TableName+"(ehid, employee_id, name, email_address, dob, "+
 			"created_at, updated_at) "+
 			"VALUES(?, ?, ?, ?, ?, NOW(), NOW())",
-		mapper.ToEhid(employeeId),
+		ehid,
 		employeeId,
 		"",
 		"",
@@ -84,15 +83,15 @@ func (r *RepositoryImpl) UpdateByEhid(
 		}
 
 		if result.RowsAffected == 0 {
-			return errors.New("request invalid")
+			return gorm.ErrRecordNotFound
 		}
 	}
 
 	return nil
 }
 
-func (r *RepositoryImpl) FindByEhid(ehid string) (Entity, error) {
-	response := Entity{
+func (r *RepositoryImpl) FindByEhid(ehid string) (*Entity, error) {
+	response := &Entity{
 		Ehid: ehid,
 	}
 	var dob sql.NullTime
@@ -103,7 +102,7 @@ func (r *RepositoryImpl) FindByEhid(ehid string) (Entity, error) {
 		Row().
 		Scan(&response.EmployeeId, &response.Name, &response.EmailAddress, &dob)
 	if err != nil {
-		return Entity{}, err
+		return nil, err
 	}
 
 	if dob.Valid {
