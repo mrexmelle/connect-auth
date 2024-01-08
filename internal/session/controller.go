@@ -5,17 +5,21 @@ import (
 	"net/http"
 
 	"github.com/mrexmelle/connect-authx/internal/config"
+	"github.com/mrexmelle/connect-authx/internal/dtoresponse"
+	"github.com/mrexmelle/connect-authx/internal/security"
 )
 
 type Controller struct {
-	ConfigService  *config.Service
-	SessionService *Service
+	ConfigService   *config.Service
+	SecurityService *security.Service
+	SessionService  *Service
 }
 
-func NewController(cfg *config.Service, svc *Service) *Controller {
+func NewController(cfg *config.Service, ss *security.Service, svc *Service) *Controller {
 	return &Controller{
-		ConfigService:  cfg,
-		SessionService: svc,
+		ConfigService:   cfg,
+		SecurityService: ss,
+		SessionService:  svc,
 	}
 }
 
@@ -24,46 +28,21 @@ func NewController(cfg *config.Service, svc *Service) *Controller {
 // @Description Post a new session
 // @Accept json
 // @Produce json
-// @Param data body RequestDto true "Session Request"
-// @Success 200 {object} ResponseDto "Success Response"
-// @Failure 500 "InternalServerError"
+// @Param data body PostRequestDto true "Session Request"
+// @Success 200 {object} PostResponseDto "Success Response"
+// @Failure 400 "BadRequest"
 // @Failure 401 "Unauthorized"
+// @Failure 500 "InternalServerError"
 // @Router /sessions [POST]
 func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
-	var requestBody RequestDto
+	var requestBody PostRequestDto
 	json.NewDecoder(r.Body).Decode(&requestBody)
-
-	queryResult, err := c.SessionService.Authenticate(requestBody)
-
-	if err != nil {
-		http.Error(w, "POST failure: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if !queryResult {
-		http.Error(w, "POST failure: "+err.Error(), http.StatusUnauthorized)
-		return
-	}
-
-	signingResult, exp, err := c.SessionService.GenerateJwt(requestBody.EmployeeId)
-	if err != nil {
-		http.Error(w, "POST failure: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	http.SetCookie(
-		w, &http.Cookie{
-			Name:     "jwt",
-			Value:    signingResult,
-			Path:     "/",
-			Expires:  exp,
-			HttpOnly: true,
-			Secure:   true,
-			SameSite: http.SameSiteNoneMode,
-		},
-	)
-	responseBody, _ := json.Marshal(
-		&ResponseDto{Token: signingResult},
-	)
-	w.Write([]byte(responseBody))
+	data, err := c.SessionService.Authenticate(requestBody)
+	dtoresponse.NewWithData[SigningResult](data, err).
+		WithErrorMap(&ErrorMap).
+		WithPrewriteHook(func(s *SigningResult) {
+			cookie := c.SecurityService.GenerateJwtCookie(s.Token, s.Expires)
+			http.SetCookie(w, &cookie)
+		}).
+		RenderTo(w)
 }
