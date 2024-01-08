@@ -1,6 +1,8 @@
 package credential
 
 import (
+	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/mrexmelle/connect-authx/internal/config"
@@ -32,14 +34,14 @@ func (r *RepositoryImpl) CreateWithDb(
 	employeeId string,
 	password string,
 ) error {
-	res := db.Exec(
+	result := db.Exec(
 		"INSERT INTO "+r.TableName+"(employee_id, password_hash, "+
 			"created_at, updated_at) "+
 			"VALUES(?, CRYPT(?, GEN_SALT('bf', 8)), NOW(), NOW())",
 		employeeId,
 		password,
 	)
-	return res.Error
+	return result.Error
 }
 
 func (r *RepositoryImpl) ExistsByEmployeeIdAndPassword(
@@ -58,6 +60,10 @@ func (r *RepositoryImpl) ExistsByEmployeeIdAndPassword(
 		).
 		Row().
 		Scan(&idResult)
+	if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	}
+
 	return (idResult == employeeId), err
 }
 
@@ -72,10 +78,7 @@ func (r *RepositoryImpl) DeleteByEmployeeId(employeeId string) error {
 				"updated_at": now,
 			},
 		)
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
+	return result.Error
 }
 
 func (r *RepositoryImpl) UpdatePasswordByEmployeeIdAndPassword(

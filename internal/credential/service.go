@@ -2,29 +2,32 @@ package credential
 
 import (
 	"github.com/mrexmelle/connect-authx/internal/config"
-	"github.com/mrexmelle/connect-authx/internal/mapper"
 	"github.com/mrexmelle/connect-authx/internal/profile"
+	"github.com/mrexmelle/connect-authx/internal/security"
 )
 
 type Service struct {
 	ConfigService        *config.Service
+	SecurityService      *security.Service
 	CredentialRepository Repository
 	ProfileRepository    profile.Repository
 }
 
 func NewService(
 	cfg *config.Service,
+	ss *security.Service,
 	cr Repository,
 	pr profile.Repository,
 ) *Service {
 	return &Service{
 		ConfigService:        cfg,
+		SecurityService:      ss,
 		CredentialRepository: cr,
 		ProfileRepository:    pr,
 	}
 }
 
-func (s *Service) Create(req PostRequestDto) (*ResponseDto, error) {
+func (s *Service) Create(req PostRequestDto) error {
 	trx := s.ConfigService.WriteDb.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -32,7 +35,7 @@ func (s *Service) Create(req PostRequestDto) (*ResponseDto, error) {
 		}
 	}()
 	if trx.Error != nil {
-		return nil, trx.Error
+		return trx.Error
 	}
 
 	err := s.CredentialRepository.CreateWithDb(
@@ -42,38 +45,39 @@ func (s *Service) Create(req PostRequestDto) (*ResponseDto, error) {
 	)
 	if err != nil {
 		trx.Rollback()
-		return nil, err
+		return err
 	}
 
-	err = s.ProfileRepository.PrepareWithDb(
+	err = s.ProfileRepository.CreateWithDb(
 		trx,
 		req.EmployeeId,
+		s.SecurityService.GenerateHash(req.EmployeeId),
 	)
 	if err != nil {
 		trx.Rollback()
-		return nil, err
+		return err
 	}
 
-	return &ResponseDto{
-		Status: mapper.ToStatus(err),
-	}, trx.Commit().Error
-}
+	err = trx.Commit().Error
+	if err != nil {
+		return err
+	}
 
-func (s *Service) UpdatePasswordByEmployeeId(
-	employeeId string,
-	req PatchPasswordRequestDto,
-) (ResponseDto, error) {
-	err := s.CredentialRepository.UpdatePasswordByEmployeeIdAndPassword(
-		req.NewPassword, employeeId, req.CurrentPassword)
-	return ResponseDto{
-		Status: mapper.ToStatus(err),
-	}, err
-}
-
-func (s *Service) ResetPasswordByEmployeeId(employeeId string) error {
-	return s.CredentialRepository.ResetPasswordByEmployeeId(employeeId)
+	return nil
 }
 
 func (s *Service) DeleteByEmployeeId(employeeId string) error {
 	return s.CredentialRepository.DeleteByEmployeeId(employeeId)
+}
+
+func (s *Service) UpdatePasswordByEmployeeId(employeeId string, req PatchPasswordRequestDto) error {
+	return s.CredentialRepository.UpdatePasswordByEmployeeIdAndPassword(
+		req.NewPassword,
+		employeeId,
+		req.CurrentPassword,
+	)
+}
+
+func (s *Service) ResetPasswordByEmployeeId(employeeId string) error {
+	return s.CredentialRepository.ResetPasswordByEmployeeId(employeeId)
 }
