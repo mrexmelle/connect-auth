@@ -13,6 +13,7 @@ type Repository interface {
 	CreateWithDb(db *gorm.DB, employeeId string, ehid string) error
 	UpdateByEhid(fields map[string]string, ehid string) error
 	FindByEhid(ehid string) (*Entity, error)
+	FindEmployeeIdByEhid(ehid string) (string, error)
 	DeleteByEhid(ehid string) error
 }
 
@@ -112,6 +113,21 @@ func (r *RepositoryImpl) FindByEhid(ehid string) (*Entity, error) {
 	}
 
 	return response, nil
+}
+
+func (r *RepositoryImpl) FindEmployeeIdByEhid(ehid string) (string, error) {
+	var employeeId string
+	err := r.ConfigService.ReadDb.
+		Select("employee_id").
+		Table(r.TableName).
+		Where("ehid = ?", ehid).
+		Row().
+		Scan(&employeeId)
+	if err != nil {
+		return "", err
+	}
+
+	return employeeId, nil
 }
 
 func (r *RepositoryImpl) DeleteByEhid(ehid string) error {

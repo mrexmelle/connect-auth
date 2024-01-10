@@ -8,6 +8,8 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
+	"github.com/go-chi/httplog"
+	"github.com/go-chi/jwtauth"
 	"github.com/mrexmelle/connect-authx/internal/config"
 	"github.com/mrexmelle/connect-authx/internal/credential"
 	"github.com/mrexmelle/connect-authx/internal/profile"
@@ -79,6 +81,19 @@ func Serve(cmd *cobra.Command, args []string) {
 			r.Get("/{ehid}", profileController.Get)
 			r.Patch("/{ehid}", profileController.Patch)
 			r.Delete("/{ehid}", profileController.Delete)
+		})
+
+		r.Group(func(r chi.Router) {
+			logger := httplog.NewLogger("secure-path-logger", httplog.Options{
+				JSON: true,
+			})
+			r.Use(httplog.RequestLogger(logger))
+			r.Use(jwtauth.Verifier(configService.TokenAuth))
+
+			r.Route("/profiles/me", func(r chi.Router) {
+				r.Get("/", profileController.GetMe)
+				r.Get("/employee-id", profileController.GetMyEmployeeId)
+			})
 		})
 
 		err := http.ListenAndServe(fmt.Sprintf(":%d", configService.GetPort()), r)
