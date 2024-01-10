@@ -108,7 +108,7 @@ func (r *RepositoryImpl) ResetPasswordByEmployeeId(
 		"UPDATE "+r.TableName+" SET "+
 			"password_hash = CRYPT(?, GEN_SALT('bf', 8)), "+
 			"updated_at = NOW() "+
-			"WHERE employee_id = ?",
+			"WHERE employee_id = ? AND deleted_at IS NULL",
 		r.ConfigService.GetDefaultUserPassword(),
 		employeeId,
 	)
