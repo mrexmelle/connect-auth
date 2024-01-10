@@ -172,6 +172,74 @@ const docTemplate = `{
                 }
             }
         },
+        "/profiles/me": {
+            "get": {
+                "description": "Get current user's profile",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profiles"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/internal_profile.GetResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "BadRequest"
+                    },
+                    "500": {
+                        "description": "InternalServerError"
+                    }
+                }
+            }
+        },
+        "/profiles/me/employee-id": {
+            "get": {
+                "description": "Get current user's employee ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profiles"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/internal_profile.GetEmployeeIdResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "BadRequest"
+                    },
+                    "500": {
+                        "description": "InternalServerError"
+                    }
+                }
+            }
+        },
         "/profiles/{ehid}": {
             "get": {
                 "description": "Get a profile",
@@ -408,6 +476,17 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "internal_profile.GetEmployeeIdResponseDto": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "string"
+                },
+                "error": {
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
                 }
             }
         },

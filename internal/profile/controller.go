@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/jwtauth"
 	"github.com/mrexmelle/connect-authx/internal/config"
 	"github.com/mrexmelle/connect-authx/internal/dtoresponse"
 )
@@ -19,6 +20,48 @@ func NewController(cfg *config.Service, svc *Service) *Controller {
 		ConfigService:  cfg,
 		ProfileService: svc,
 	}
+}
+
+// Get My Profile : HTTP endpoint to get current user's profile
+// @Tags Profiles
+// @Description Get current user's profile
+// @Produce json
+// @Param Authorization header string true "Bearer Token"
+// @Success 200 {object} GetResponseDto "Success Response"
+// @Failure 400 "BadRequest"
+// @Failure 500 "InternalServerError"
+// @Router /profiles/me [GET]
+func (c *Controller) GetMe(w http.ResponseWriter, r *http.Request) {
+	_, claims, err := jwtauth.FromContext(r.Context())
+	if err != nil {
+		dtoresponse.NewWithData[Entity](nil, err).RenderTo(w)
+		return
+	}
+	data, err := c.ProfileService.RetrieveByEhid(
+		claims["sub"].(string),
+	)
+	dtoresponse.NewWithData[Entity](data, err).RenderTo(w)
+}
+
+// Get My Employee ID : HTTP endpoint to get current user's employee ID
+// @Tags Profiles
+// @Description Get current user's employee ID
+// @Produce json
+// @Param Authorization header string true "Bearer Token"
+// @Success 200 {object} GetEmployeeIdResponseDto "Success Response"
+// @Failure 400 "BadRequest"
+// @Failure 500 "InternalServerError"
+// @Router /profiles/me/employee-id [GET]
+func (c *Controller) GetMyEmployeeId(w http.ResponseWriter, r *http.Request) {
+	_, claims, err := jwtauth.FromContext(r.Context())
+	if err != nil {
+		dtoresponse.NewWithData[string](new(string), err).RenderTo(w)
+		return
+	}
+	data, err := c.ProfileService.RetrieveEmployeeIdByEhid(
+		claims["sub"].(string),
+	)
+	dtoresponse.NewWithData[string](&data, err).RenderTo(w)
 }
 
 // Get Profiles : HTTP endpoint to get a profile

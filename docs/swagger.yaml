@@ -54,6 +54,13 @@ definitions:
       name:
         type: string
     type: object
+  internal_profile.GetEmployeeIdResponseDto:
+    properties:
+      data:
+        type: string
+      error:
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+    type: object
   internal_profile.GetResponseDto:
     properties:
       data:
@@ -272,6 +279,50 @@ paths:
           description: Success Response
           schema:
             $ref: '#/definitions/internal_profile.PatchResponseDto'
+        "400":
+          description: BadRequest
+        "500":
+          description: InternalServerError
+      tags:
+      - Profiles
+  /profiles/me:
+    get:
+      description: Get current user's profile
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/internal_profile.GetResponseDto'
+        "400":
+          description: BadRequest
+        "500":
+          description: InternalServerError
+      tags:
+      - Profiles
+  /profiles/me/employee-id:
+    get:
+      description: Get current user's employee ID
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/internal_profile.GetEmployeeIdResponseDto'
         "400":
           description: BadRequest
         "500":

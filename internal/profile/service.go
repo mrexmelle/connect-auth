@@ -27,3 +27,7 @@ func (s *Service) UpdateByEhid(fields map[string]string, ehid string) error {
 func (s *Service) DeleteByEhid(ehid string) error {
 	return s.ProfileRepository.DeleteByEhid(ehid)
 }
+
+func (s *Service) RetrieveEmployeeIdByEhid(ehid string) (string, error) {
+	return s.ProfileRepository.FindEmployeeIdByEhid(ehid)
+}
