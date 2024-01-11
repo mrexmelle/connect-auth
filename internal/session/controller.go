@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/mrexmelle/connect-authx/internal/config"
-	"github.com/mrexmelle/connect-authx/internal/dtoresponse"
+	"github.com/mrexmelle/connect-authx/internal/dto/dtobuilderwithdata"
 	"github.com/mrexmelle/connect-authx/internal/security"
 )
 
@@ -36,10 +36,13 @@ func NewController(cfg *config.Service, ss *security.Service, svc *Service) *Con
 // @Router /sessions [POST]
 func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	var requestBody PostRequestDto
-	json.NewDecoder(r.Body).Decode(&requestBody)
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		dtobuilderwithdata.New[SigningResult](nil, err).RenderTo(w)
+		return
+	}
 	data, err := c.SessionService.Authenticate(requestBody)
-	dtoresponse.NewWithData[SigningResult](data, err).
-		WithErrorMap(&ErrorMap).
+	dtobuilderwithdata.New[SigningResult](data, err).
 		WithPrewriteHook(func(s *SigningResult) {
 			cookie := c.SecurityService.GenerateJwtCookie(s.Token, s.Expires)
 			http.SetCookie(w, &cookie)

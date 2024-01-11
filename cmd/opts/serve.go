@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/mrexmelle/connect-authx/internal/config"
 	"github.com/mrexmelle/connect-authx/internal/credential"
+	"github.com/mrexmelle/connect-authx/internal/localerror"
 	"github.com/mrexmelle/connect-authx/internal/profile"
 	"github.com/mrexmelle/connect-authx/internal/security"
 	"github.com/mrexmelle/connect-authx/internal/session"
@@ -33,6 +34,7 @@ func Serve(cmd *cobra.Command, args []string) {
 
 	container.Provide(config.NewService)
 	container.Provide(credential.NewService)
+	container.Provide(localerror.NewService)
 	container.Provide(profile.NewService)
 	container.Provide(security.NewService)
 	container.Provide(session.NewService)

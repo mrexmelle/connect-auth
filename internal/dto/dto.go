@@ -1,4 +1,4 @@
-package dtoresponse
+package dto
 
 type HttpResponseWithData[T any] struct {
 	Data  *T           `json:"data"`

@@ -1,4 +1,4 @@
-package errmap
+package localerror
 
 type CodePair struct {
 	HttpStatusCode   int
