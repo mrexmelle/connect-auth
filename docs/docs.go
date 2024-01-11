@@ -172,40 +172,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/profiles/me": {
-            "get": {
-                "description": "Get current user's profile",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Profiles"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success Response",
-                        "schema": {
-                            "$ref": "#/definitions/internal_profile.GetResponseDto"
-                        }
-                    },
-                    "400": {
-                        "description": "BadRequest"
-                    },
-                    "500": {
-                        "description": "InternalServerError"
-                    }
-                }
-            }
-        },
         "/profiles/me/employee-id": {
             "get": {
                 "description": "Get current user's employee ID",
@@ -394,7 +360,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError": {
+        "github_com_mrexmelle_connect-authx_internal_dto.ServiceError": {
             "type": "object",
             "properties": {
                 "code": {
@@ -409,7 +375,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {
-                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError"
                 }
             }
         },
@@ -428,7 +394,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {
-                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError"
                 }
             }
         },
@@ -447,7 +413,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {
-                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError"
                 }
             }
         },
@@ -455,7 +421,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {
-                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError"
                 }
             }
         },
@@ -486,7 +452,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "error": {
-                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError"
                 }
             }
         },
@@ -497,7 +463,7 @@ const docTemplate = `{
                     "$ref": "#/definitions/internal_profile.Entity"
                 },
                 "error": {
-                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError"
                 }
             }
         },
@@ -516,7 +482,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {
-                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError"
                 }
             }
         },
@@ -538,7 +504,7 @@ const docTemplate = `{
                     "$ref": "#/definitions/internal_session.SigningResult"
                 },
                 "error": {
-                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError"
+                    "$ref": "#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError"
                 }
             }
         },

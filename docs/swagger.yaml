@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError:
+  github_com_mrexmelle_connect-authx_internal_dto.ServiceError:
     properties:
       code:
         type: string
@@ -10,7 +10,7 @@ definitions:
   internal_credential.DeleteResponseDto:
     properties:
       error:
-        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError'
     type: object
   internal_credential.PatchPasswordRequestDto:
     properties:
@@ -22,7 +22,7 @@ definitions:
   internal_credential.PatchPasswordResponseDto:
     properties:
       error:
-        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError'
     type: object
   internal_credential.PostRequestDto:
     properties:
@@ -34,12 +34,12 @@ definitions:
   internal_credential.PostResponseDto:
     properties:
       error:
-        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError'
     type: object
   internal_profile.DeleteResponseDto:
     properties:
       error:
-        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError'
     type: object
   internal_profile.Entity:
     properties:
@@ -59,14 +59,14 @@ definitions:
       data:
         type: string
       error:
-        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError'
     type: object
   internal_profile.GetResponseDto:
     properties:
       data:
         $ref: '#/definitions/internal_profile.Entity'
       error:
-        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError'
     type: object
   internal_profile.PatchRequestDto:
     properties:
@@ -78,7 +78,7 @@ definitions:
   internal_profile.PatchResponseDto:
     properties:
       error:
-        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError'
     type: object
   internal_session.PostRequestDto:
     properties:
@@ -92,7 +92,7 @@ definitions:
       data:
         $ref: '#/definitions/internal_session.SigningResult'
       error:
-        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dtoresponse.ServiceError'
+        $ref: '#/definitions/github_com_mrexmelle_connect-authx_internal_dto.ServiceError'
     type: object
   internal_session.SigningResult:
     properties:
@@ -279,28 +279,6 @@ paths:
           description: Success Response
           schema:
             $ref: '#/definitions/internal_profile.PatchResponseDto'
-        "400":
-          description: BadRequest
-        "500":
-          description: InternalServerError
-      tags:
-      - Profiles
-  /profiles/me:
-    get:
-      description: Get current user's profile
-      parameters:
-      - description: Bearer Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Success Response
-          schema:
-            $ref: '#/definitions/internal_profile.GetResponseDto'
         "400":
           description: BadRequest
         "500":

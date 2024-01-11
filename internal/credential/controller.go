@@ -6,7 +6,8 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/mrexmelle/connect-authx/internal/config"
-	"github.com/mrexmelle/connect-authx/internal/dtoresponse"
+	"github.com/mrexmelle/connect-authx/internal/dto/dtobuilderwithoutdata"
+	"github.com/mrexmelle/connect-authx/internal/localerror"
 )
 
 type Controller struct {
@@ -33,9 +34,13 @@ func NewController(cfg *config.Service, svc *Service) *Controller {
 // @Router /credentials [POST]
 func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	var requestBody PostRequestDto
-	json.NewDecoder(r.Body).Decode(&requestBody)
-	err := c.CredentialService.Create(requestBody)
-	dtoresponse.NewWithoutData(err).RenderTo(w)
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		dtobuilderwithoutdata.New(localerror.ErrParsingJson).RenderTo(w)
+		return
+	}
+	err = c.CredentialService.Create(requestBody)
+	dtobuilderwithoutdata.New(err).RenderTo(w)
 }
 
 // Delete Credentials : HTTP endpoint to delete credentials
@@ -49,7 +54,7 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 // @Router /credentials/{employee_id} [DELETE]
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	err := c.CredentialService.DeleteByEmployeeId(chi.URLParam(r, "employee_id"))
-	dtoresponse.NewWithoutData(err).RenderTo(w)
+	dtobuilderwithoutdata.New(err).RenderTo(w)
 }
 
 // Patch Password : HTTP endpoint to patch password
@@ -65,11 +70,15 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 // @Router /credentials/{employee_id}/password [PATCH]
 func (c *Controller) PatchPassword(w http.ResponseWriter, r *http.Request) {
 	var requestBody PatchPasswordRequestDto
-	json.NewDecoder(r.Body).Decode(&requestBody)
-	err := c.CredentialService.UpdatePasswordByEmployeeId(
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		dtobuilderwithoutdata.New(localerror.ErrParsingJson).RenderTo(w)
+		return
+	}
+	err = c.CredentialService.UpdatePasswordByEmployeeId(
 		chi.URLParam(r, "employee_id"),
 		requestBody)
-	dtoresponse.NewWithoutData(err).RenderTo(w)
+	dtobuilderwithoutdata.New(err).RenderTo(w)
 }
 
 // Reset Password : HTTP endpoint to reset password
@@ -83,5 +92,5 @@ func (c *Controller) PatchPassword(w http.ResponseWriter, r *http.Request) {
 // @Router /credentials/{employee_id}/password [DELETE]
 func (c *Controller) DeletePassword(w http.ResponseWriter, r *http.Request) {
 	err := c.CredentialService.ResetPasswordByEmployeeId(chi.URLParam(r, "employee_id"))
-	dtoresponse.NewWithoutData(err).RenderTo(w)
+	dtobuilderwithoutdata.New(err).RenderTo(w)
 }

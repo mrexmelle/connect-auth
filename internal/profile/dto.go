@@ -1,12 +1,12 @@
 package profile
 
-import "github.com/mrexmelle/connect-authx/internal/dtoresponse"
+import "github.com/mrexmelle/connect-authx/internal/dto"
 
 type PatchRequestDto struct {
 	Fields map[string]string `json:"fields"`
 }
 
-type GetResponseDto = dtoresponse.HttpResponseWithData[Entity]
-type GetEmployeeIdResponseDto = dtoresponse.HttpResponseWithData[string]
-type PatchResponseDto = dtoresponse.HttpResponseWithoutData
-type DeleteResponseDto = dtoresponse.HttpResponseWithoutData
+type GetResponseDto = dto.HttpResponseWithData[Entity]
+type GetEmployeeIdResponseDto = dto.HttpResponseWithData[string]
+type PatchResponseDto = dto.HttpResponseWithoutData
+type DeleteResponseDto = dto.HttpResponseWithoutData
