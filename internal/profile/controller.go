@@ -22,27 +22,6 @@ func NewController(cfg *config.Service, svc *Service) *Controller {
 	}
 }
 
-// Get My Profile : HTTP endpoint to get current user's profile
-// @Tags Profiles
-// @Description Get current user's profile
-// @Produce json
-// @Param Authorization header string true "Bearer Token"
-// @Success 200 {object} GetResponseDto "Success Response"
-// @Failure 400 "BadRequest"
-// @Failure 500 "InternalServerError"
-// @Router /profiles/me [GET]
-func (c *Controller) GetMe(w http.ResponseWriter, r *http.Request) {
-	_, claims, err := jwtauth.FromContext(r.Context())
-	if err != nil {
-		dtoresponse.NewWithData[Entity](nil, err).RenderTo(w)
-		return
-	}
-	data, err := c.ProfileService.RetrieveByEhid(
-		claims["sub"].(string),
-	)
-	dtoresponse.NewWithData[Entity](data, err).RenderTo(w)
-}
-
 // Get My Employee ID : HTTP endpoint to get current user's employee ID
 // @Tags Profiles
 // @Description Get current user's employee ID
@@ -93,8 +72,12 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 // @Router /profiles/{ehid} [PATCH]
 func (c *Controller) Patch(w http.ResponseWriter, r *http.Request) {
 	var requestBody PatchRequestDto
-	json.NewDecoder(r.Body).Decode(&requestBody)
-	err := c.ProfileService.UpdateByEhid(
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		dtoresponse.NewWithoutData(err).RenderTo(w)
+		return
+	}
+	err = c.ProfileService.UpdateByEhid(
 		requestBody.Fields,
 		chi.URLParam(r, "ehid"),
 	)

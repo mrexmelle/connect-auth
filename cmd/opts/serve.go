@@ -91,7 +91,6 @@ func Serve(cmd *cobra.Command, args []string) {
 			r.Use(jwtauth.Verifier(configService.TokenAuth))
 
 			r.Route("/profiles/me", func(r chi.Router) {
-				r.Get("/", profileController.GetMe)
 				r.Get("/employee-id", profileController.GetMyEmployeeId)
 			})
 		})
