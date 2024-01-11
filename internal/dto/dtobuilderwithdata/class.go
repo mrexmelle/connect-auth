@@ -5,14 +5,14 @@ import (
 	"net/http"
 
 	"github.com/mrexmelle/connect-authx/internal/dto"
-	localerr "github.com/mrexmelle/connect-authx/internal/localerror"
+	"github.com/mrexmelle/connect-authx/internal/localerror"
 )
 
 type Class[T any] struct {
 	Data              *T
 	Error             error
 	PreWriteHook      func(*T)
-	LocalErrorService *localerr.Service
+	LocalErrorService *localerror.Service
 }
 
 func New[T any](data *T, err error) *Class[T] {
