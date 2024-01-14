@@ -36,7 +36,7 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	var requestBody PostRequestDto
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
-		dtobuilderwithoutdata.New(localerror.ErrParsingJson).RenderTo(w)
+		dtobuilderwithoutdata.New(localerror.ErrBadJson).RenderTo(w)
 		return
 	}
 	err = c.CredentialService.Create(requestBody)
@@ -72,7 +72,7 @@ func (c *Controller) PatchPassword(w http.ResponseWriter, r *http.Request) {
 	var requestBody PatchPasswordRequestDto
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
-		dtobuilderwithoutdata.New(localerror.ErrParsingJson).RenderTo(w)
+		dtobuilderwithoutdata.New(localerror.ErrBadJson).RenderTo(w)
 		return
 	}
 	err = c.CredentialService.UpdatePasswordByEmployeeId(

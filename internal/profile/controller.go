@@ -76,7 +76,7 @@ func (c *Controller) Patch(w http.ResponseWriter, r *http.Request) {
 	var requestBody PatchRequestDto
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
-		dtobuilderwithoutdata.New(localerror.ErrParsingJson).RenderTo(w)
+		dtobuilderwithoutdata.New(localerror.ErrBadJson).RenderTo(w)
 		return
 	}
 	err = c.ProfileService.UpdateByEhid(
