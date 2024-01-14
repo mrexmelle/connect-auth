@@ -52,12 +52,9 @@ func (r *RepositoryImpl) ExistsByEmployeeIdAndPassword(
 	err := r.ConfigService.ReadDb.
 		Select("employee_id").
 		Table(r.TableName).
-		Where(
-			"employee_id = ? AND password_hash = CRYPT(?, password_hash) "+
-				"AND deleted_at IS NULL",
-			employeeId,
-			password,
-		).
+		Where("deleted_at IS NULL").
+		Where("employee_id = ?", employeeId).
+		Where("password_hash = CRYPT(?, password_hash)", password).
 		Row().
 		Scan(&idResult)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -71,7 +68,8 @@ func (r *RepositoryImpl) DeleteByEmployeeId(employeeId string) error {
 	now := time.Now()
 	result := r.ConfigService.WriteDb.
 		Table(r.TableName).
-		Where("employee_id = ? AND deleted_at IS NULL", employeeId).
+		Where("deleted_at IS NULL").
+		Where("employee_id = ?", employeeId).
 		Updates(
 			map[string]interface{}{
 				"deleted_at": now,

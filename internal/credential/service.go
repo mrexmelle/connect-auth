@@ -2,6 +2,7 @@ package credential
 
 import (
 	"github.com/mrexmelle/connect-authx/internal/config"
+	"github.com/mrexmelle/connect-authx/internal/localerror"
 	"github.com/mrexmelle/connect-authx/internal/profile"
 	"github.com/mrexmelle/connect-authx/internal/security"
 )
@@ -28,6 +29,10 @@ func NewService(
 }
 
 func (s *Service) Create(req PostRequestDto) error {
+	if req.EmployeeId == "" || req.Password == "" {
+		return localerror.ErrBadInput
+	}
+
 	trx := s.ConfigService.WriteDb.Begin()
 	defer func() {
 		if r := recover(); r != nil {
