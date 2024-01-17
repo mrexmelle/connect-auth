@@ -79,10 +79,7 @@ func (c *Controller) Patch(w http.ResponseWriter, r *http.Request) {
 		dtobuilderwithoutdata.New(localerror.ErrBadJson).RenderTo(w)
 		return
 	}
-	err = c.ProfileService.UpdateByEhid(
-		requestBody.Fields,
-		chi.URLParam(r, "ehid"),
-	)
+	err = c.ProfileService.UpdateByEhid(requestBody.Fields, chi.URLParam(r, "ehid"))
 	dtobuilderwithoutdata.New(err).RenderTo(w)
 }
 

@@ -52,23 +52,22 @@ func (r *RepositoryImpl) UpdateByEhid(
 	ehid string,
 ) error {
 	dbFields := map[string]interface{}{}
-	name, ok := fields["name"]
-	if ok {
-		dbFields["name"] = name
-	}
+	for i := range FieldsPatchable {
+		introspectedKey := FieldsPatchable[i]
+		value, ok := fields[introspectedKey]
 
-	emailAddress, ok := fields["email_address"]
-	if ok {
-		dbFields["email_address"] = emailAddress
-	}
+		if introspectedKey == "dob" && ok {
+			ts, err := time.Parse("2006-01-02", value)
+			if err == nil {
+				dbFields["dob"] = datatypes.Date(ts)
+			} else {
+				return err
+			}
+			continue
+		}
 
-	dob, ok := fields["dob"]
-	if ok {
-		ts, err := time.Parse("2006-01-02", dob)
-		if err == nil {
-			dbFields["dob"] = datatypes.Date(ts)
-		} else {
-			return err
+		if ok {
+			dbFields[introspectedKey] = value
 		}
 	}
 
