@@ -1,6 +1,6 @@
 
 PROJECT_NAME=connect-authx
-VERSION=0.2.0
+VERSION=0.2.1
 IMAGE_NAME=ghcr.io/mrexmelle/$(PROJECT_NAME)
 GO_SOURCES=$(shell find . -name '*.go' -not -path "./vendor/*")
 

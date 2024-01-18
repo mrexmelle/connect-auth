@@ -1,9 +1,15 @@
 # connect-authx
 
+## Installing dependencies
+
+```
+$ go install github.com/swaggo/swag/cmd/swag
+```
+
 ## Compiling
 
 ```
-$ make clean && make
+$ make distclean && make docs && make
 ```
 
 ## Building Docker image
