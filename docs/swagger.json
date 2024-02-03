@@ -10,7 +10,7 @@
             "name": "Apache 2.0",
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        "version": "0.2.1"
+        "version": "0.2.2"
     },
     "host": "localhost:8080",
     "basePath": "/",
@@ -166,9 +166,9 @@
                 }
             }
         },
-        "/profiles/me/employee-id": {
+        "/profiles/me/ehid": {
             "get": {
-                "description": "Get current user's employee ID",
+                "description": "Get current user's EHID",
                 "produces": [
                     "application/json"
                 ],
@@ -188,7 +188,7 @@
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/internal_profile.GetEmployeeIdResponseDto"
+                            "$ref": "#/definitions/internal_profile.GetEhidResponseDto"
                         }
                     },
                     "400": {
@@ -439,7 +439,7 @@
                 }
             }
         },
-        "internal_profile.GetEmployeeIdResponseDto": {
+        "internal_profile.GetEhidResponseDto": {
             "type": "object",
             "properties": {
                 "data": {

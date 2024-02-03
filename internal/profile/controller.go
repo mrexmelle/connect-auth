@@ -24,24 +24,22 @@ func NewController(cfg *config.Service, svc *Service) *Controller {
 	}
 }
 
-// Get My Employee ID : HTTP endpoint to get current user's employee ID
+// Get My EHID : HTTP endpoint to get current user's EHID
 // @Tags Profiles
-// @Description Get current user's employee ID
+// @Description Get current user's EHID
 // @Produce json
 // @Param Authorization header string true "Bearer Token"
-// @Success 200 {object} GetEmployeeIdResponseDto "Success Response"
+// @Success 200 {object} GetEhidResponseDto "Success Response"
 // @Failure 400 "BadRequest"
 // @Failure 500 "InternalServerError"
-// @Router /profiles/me/employee-id [GET]
-func (c *Controller) GetMyEmployeeId(w http.ResponseWriter, r *http.Request) {
+// @Router /profiles/me/ehid [GET]
+func (c *Controller) GetMyEhid(w http.ResponseWriter, r *http.Request) {
 	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
-		dtobuilderwithdata.New[string](new(string), err).RenderTo(w)
+		dtobuilderwithdata.New[string](new(string), localerror.ErrAuthentication).RenderTo(w)
 		return
 	}
-	data, err := c.ProfileService.RetrieveEmployeeIdByEhid(
-		claims["sub"].(string),
-	)
+	data := claims["sub"].(string)
 	dtobuilderwithdata.New[string](&data, err).RenderTo(w)
 }
 
