@@ -16,7 +16,7 @@ func NewClient(host string, port int) *Client {
 	}
 }
 
-func (c *Client) GetProfilesByEhid(ehid string) (*GetResponseDto, error) {
+func (c *Client) GetProfileByEhid(ehid string) (*GetResponseDto, error) {
 	req, err := http.NewRequest(
 		http.MethodGet,
 		fmt.Sprintf("%s%s/%s", c.BaseUrl, "/profiles", ehid),
