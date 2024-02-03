@@ -7,6 +7,6 @@ type PatchRequestDto struct {
 }
 
 type GetResponseDto = dto.HttpResponseWithData[Entity]
-type GetEmployeeIdResponseDto = dto.HttpResponseWithData[string]
+type GetEhidResponseDto = dto.HttpResponseWithData[string]
 type PatchResponseDto = dto.HttpResponseWithoutData
 type DeleteResponseDto = dto.HttpResponseWithoutData

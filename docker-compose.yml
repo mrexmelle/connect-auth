@@ -2,7 +2,7 @@ version: '3.8'
 services:
   core:
     container_name: connect-authx-core
-    image: ghcr.io/mrexmelle/connect-authx:0.2.1
+    image: ghcr.io/mrexmelle/connect-authx:0.2.2
     environment:
       - APP_PROFILE=docked
     ports:

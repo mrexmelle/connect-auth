@@ -172,9 +172,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/profiles/me/employee-id": {
+        "/profiles/me/ehid": {
             "get": {
-                "description": "Get current user's employee ID",
+                "description": "Get current user's EHID",
                 "produces": [
                     "application/json"
                 ],
@@ -194,7 +194,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Success Response",
                         "schema": {
-                            "$ref": "#/definitions/internal_profile.GetEmployeeIdResponseDto"
+                            "$ref": "#/definitions/internal_profile.GetEhidResponseDto"
                         }
                     },
                     "400": {
@@ -445,7 +445,7 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_profile.GetEmployeeIdResponseDto": {
+        "internal_profile.GetEhidResponseDto": {
             "type": "object",
             "properties": {
                 "data": {
@@ -528,7 +528,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "0.2.1",
+	Version:          "0.2.2",
 	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},

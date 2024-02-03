@@ -54,7 +54,7 @@ definitions:
       name:
         type: string
     type: object
-  internal_profile.GetEmployeeIdResponseDto:
+  internal_profile.GetEhidResponseDto:
     properties:
       data:
         type: string
@@ -113,7 +113,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: Connect Authentication API
-  version: 0.2.1
+  version: 0.2.2
 paths:
   /credentials:
     post:
@@ -285,9 +285,9 @@ paths:
           description: InternalServerError
       tags:
       - Profiles
-  /profiles/me/employee-id:
+  /profiles/me/ehid:
     get:
-      description: Get current user's employee ID
+      description: Get current user's EHID
       parameters:
       - description: Bearer Token
         in: header
@@ -300,7 +300,7 @@ paths:
         "200":
           description: Success Response
           schema:
-            $ref: '#/definitions/internal_profile.GetEmployeeIdResponseDto'
+            $ref: '#/definitions/internal_profile.GetEhidResponseDto'
         "400":
           description: BadRequest
         "500":
