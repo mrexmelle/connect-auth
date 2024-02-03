@@ -6,7 +6,7 @@ import (
 )
 
 // @title           Connect Authentication API
-// @version         0.2.2
+// @version         0.3.0
 // @description     Authentication API for Connect.
 
 // @contact.email  mrexmelle@gmail.com
