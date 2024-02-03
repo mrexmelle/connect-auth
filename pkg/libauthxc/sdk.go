@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	"github.com/mrexmelle/connect-authx/internal/profile"
 )
 
 type Client struct {
@@ -18,7 +16,7 @@ func NewClient(host string, port int) *Client {
 	}
 }
 
-func (c *Client) GetProfilesByEhid(ehid string) (*profile.GetResponseDto, error) {
+func (c *Client) GetProfilesByEhid(ehid string) (*GetResponseDto, error) {
 	req, err := http.NewRequest(
 		http.MethodGet,
 		fmt.Sprintf("%s%s/%s", c.BaseUrl, "/profiles", ehid),
@@ -28,7 +26,7 @@ func (c *Client) GetProfilesByEhid(ehid string) (*profile.GetResponseDto, error)
 		return nil, err
 	}
 
-	data := profile.GetResponseDto{}
+	data := GetResponseDto{}
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
