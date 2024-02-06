@@ -1,6 +1,8 @@
 package credential
 
-import "github.com/mrexmelle/connect-authx/internal/dto"
+import (
+	"github.com/mrexmelle/connect-authx/internal/dto/dtorespwithoutdata"
+)
 
 type PatchPasswordRequestDto struct {
 	CurrentPassword string `json:"current_password"`
@@ -12,7 +14,7 @@ type PostRequestDto struct {
 	Password   string `json:"password"`
 }
 
-type PostResponseDto = dto.HttpResponseWithoutData
-type DeleteResponseDto = dto.HttpResponseWithoutData
-type PatchPasswordResponseDto = dto.HttpResponseWithoutData
-type DeletePasswordResponseDto = dto.HttpResponseWithoutData
+type PostResponseDto = dtorespwithoutdata.Class
+type DeleteResponseDto = dtorespwithoutdata.Class
+type PatchPasswordResponseDto = dtorespwithoutdata.Class
+type DeletePasswordResponseDto = dtorespwithoutdata.Class
