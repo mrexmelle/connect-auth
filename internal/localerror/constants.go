@@ -11,6 +11,11 @@ import (
 var (
 	ErrAuthentication = errors.New("authentication_error")
 	ErrBadJson        = errors.New("bad_json")
+	ErrBadHierarchy   = errors.New("bad_hierarchy")
+	ErrAlreadyMax     = errors.New("already_max")
+	ErrIdNotInteger   = errors.New("id_not_integer")
+	ErrBadQueryParam  = errors.New("bad_query_param")
+	ErrHttpClient     = errors.New("http_client_error")
 	ErrBadInput       = errors.New("bad_input")
 )
 
@@ -28,7 +33,12 @@ var ErrorMap = map[error]CodePair{
 	gorm.ErrForeignKeyViolated: NewCodePair(http.StatusBadRequest, ErrSvcCodeForeignKeyViolated),
 	gorm.ErrRecordNotFound:     NewCodePair(http.StatusNotFound, ErrSvcCodeRecordNotFound),
 	sql.ErrNoRows:              NewCodePair(http.StatusNotFound, ErrSvcCodeRecordNotFound),
-	ErrAuthentication:          NewCodePair(http.StatusUnauthorized, ErrAuthentication.Error()),
-	ErrBadJson:                 NewCodePair(http.StatusBadRequest, ErrBadJson.Error()),
-	ErrBadInput:                NewCodePair(http.StatusBadRequest, ErrBadInput.Error()),
+
+	ErrAuthentication: NewCodePair(http.StatusUnauthorized, ErrAuthentication.Error()),
+	ErrBadJson:        NewCodePair(http.StatusBadRequest, ErrBadJson.Error()),
+	ErrBadHierarchy:   NewCodePair(http.StatusBadRequest, ErrBadHierarchy.Error()),
+	ErrAlreadyMax:     NewCodePair(http.StatusForbidden, ErrAlreadyMax.Error()),
+	ErrIdNotInteger:   NewCodePair(http.StatusBadRequest, ErrIdNotInteger.Error()),
+	ErrBadQueryParam:  NewCodePair(http.StatusBadRequest, ErrBadQueryParam.Error()),
+	ErrHttpClient:     NewCodePair(http.StatusInternalServerError, ErrHttpClient.Error()),
 }

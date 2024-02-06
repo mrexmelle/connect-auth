@@ -5,21 +5,29 @@ import (
 	"net/http"
 
 	"github.com/mrexmelle/connect-authx/internal/config"
-	"github.com/mrexmelle/connect-authx/internal/dto/dtobuilderwithdata"
+	"github.com/mrexmelle/connect-authx/internal/dto/dtorespwithdata"
+	"github.com/mrexmelle/connect-authx/internal/localerror"
 	"github.com/mrexmelle/connect-authx/internal/security"
 )
 
 type Controller struct {
-	ConfigService   *config.Service
-	SecurityService *security.Service
-	SessionService  *Service
+	ConfigService     *config.Service
+	LocalErrorService *localerror.Service
+	SecurityService   *security.Service
+	SessionService    *Service
 }
 
-func NewController(cfg *config.Service, ss *security.Service, svc *Service) *Controller {
+func NewController(
+	cfg *config.Service,
+	les *localerror.Service,
+	ss *security.Service,
+	svc *Service,
+) *Controller {
 	return &Controller{
-		ConfigService:   cfg,
-		SecurityService: ss,
-		SessionService:  svc,
+		ConfigService:     cfg,
+		LocalErrorService: les,
+		SecurityService:   ss,
+		SessionService:    svc,
 	}
 }
 
@@ -38,14 +46,20 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	var requestBody PostRequestDto
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
-		dtobuilderwithdata.New[SigningResult](nil, err).RenderTo(w)
+		dtorespwithdata.NewError(
+			localerror.ErrBadJson.Error(),
+			err.Error(),
+		).RenderTo(w, http.StatusBadRequest)
 		return
 	}
 	data, err := c.SessionService.Authenticate(requestBody)
-	dtobuilderwithdata.New[SigningResult](data, err).
-		WithPrewriteHook(func(s *SigningResult) {
-			cookie := c.SecurityService.GenerateJwtCookie(s.Token, s.Expires)
-			http.SetCookie(w, &cookie)
-		}).
-		RenderTo(w)
+	info := c.LocalErrorService.Map(err)
+	dtorespwithdata.New[SigningResult](
+		data,
+		info.ServiceErrorCode,
+		info.ServiceErrorMessage,
+	).WithPrewriteHook(func(s *SigningResult) {
+		cookie := c.SecurityService.GenerateJwtCookie(s.Token, s.Expires)
+		http.SetCookie(w, &cookie)
+	}).RenderTo(w, info.HttpStatusCode)
 }

@@ -7,20 +7,22 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/jwtauth"
 	"github.com/mrexmelle/connect-authx/internal/config"
-	"github.com/mrexmelle/connect-authx/internal/dto/dtobuilderwithdata"
-	"github.com/mrexmelle/connect-authx/internal/dto/dtobuilderwithoutdata"
+	"github.com/mrexmelle/connect-authx/internal/dto/dtorespwithdata"
+	"github.com/mrexmelle/connect-authx/internal/dto/dtorespwithoutdata"
 	"github.com/mrexmelle/connect-authx/internal/localerror"
 )
 
 type Controller struct {
-	ConfigService  *config.Service
-	ProfileService *Service
+	ConfigService     *config.Service
+	LocalErrorService *localerror.Service
+	ProfileService    *Service
 }
 
-func NewController(cfg *config.Service, svc *Service) *Controller {
+func NewController(cfg *config.Service, les *localerror.Service, svc *Service) *Controller {
 	return &Controller{
-		ConfigService:  cfg,
-		ProfileService: svc,
+		ConfigService:     cfg,
+		LocalErrorService: les,
+		ProfileService:    svc,
 	}
 }
 
@@ -36,11 +38,27 @@ func NewController(cfg *config.Service, svc *Service) *Controller {
 func (c *Controller) GetMyEhid(w http.ResponseWriter, r *http.Request) {
 	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
-		dtobuilderwithdata.New[string](new(string), localerror.ErrAuthentication).RenderTo(w)
+		dtorespwithdata.NewError(
+			localerror.ErrAuthentication.Error(),
+			err.Error(),
+		).RenderTo(w, http.StatusUnauthorized)
 		return
 	}
+
 	data := claims["sub"].(string)
-	dtobuilderwithdata.New[string](&data, err).RenderTo(w)
+	if data == "" {
+		dtorespwithdata.NewError(
+			localerror.ErrAuthentication.Error(),
+			"sub claim empty or not found",
+		).RenderTo(w, http.StatusBadRequest)
+		return
+	}
+
+	dtorespwithdata.New[string](
+		&data,
+		localerror.ErrSvcCodeNone,
+		"OK",
+	).RenderTo(w, http.StatusOK)
 }
 
 // Get Profiles : HTTP endpoint to get a profile
@@ -56,7 +74,12 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 	data, err := c.ProfileService.RetrieveByEhid(
 		chi.URLParam(r, "ehid"),
 	)
-	dtobuilderwithdata.New[Entity](data, err).RenderTo(w)
+	info := c.LocalErrorService.Map(err)
+	dtorespwithdata.New[Entity](
+		data,
+		info.ServiceErrorCode,
+		info.ServiceErrorMessage,
+	).RenderTo(w, info.HttpStatusCode)
 }
 
 // Patch Profiles : HTTP endpoint to patch a profile
@@ -74,11 +97,18 @@ func (c *Controller) Patch(w http.ResponseWriter, r *http.Request) {
 	var requestBody PatchRequestDto
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
-		dtobuilderwithoutdata.New(localerror.ErrBadJson).RenderTo(w)
+		dtorespwithoutdata.New(
+			localerror.ErrBadJson.Error(),
+			err.Error(),
+		).RenderTo(w, http.StatusBadRequest)
 		return
 	}
 	err = c.ProfileService.UpdateByEhid(requestBody.Fields, chi.URLParam(r, "ehid"))
-	dtobuilderwithoutdata.New(err).RenderTo(w)
+	info := c.LocalErrorService.Map(err)
+	dtorespwithoutdata.New(
+		info.ServiceErrorCode,
+		info.ServiceErrorMessage,
+	).RenderTo(w, info.HttpStatusCode)
 }
 
 // Delete Profiles : HTTP endpoint to delete a profile
@@ -92,5 +122,9 @@ func (c *Controller) Patch(w http.ResponseWriter, r *http.Request) {
 // @Router /profiles/{ehid} [DELETE]
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	err := c.ProfileService.DeleteByEhid(chi.URLParam(r, "ehid"))
-	dtobuilderwithoutdata.New(err).RenderTo(w)
+	info := c.LocalErrorService.Map(err)
+	dtorespwithoutdata.New(
+		info.ServiceErrorCode,
+		info.ServiceErrorMessage,
+	).RenderTo(w, info.HttpStatusCode)
 }
