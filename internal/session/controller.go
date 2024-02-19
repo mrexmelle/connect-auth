@@ -54,7 +54,7 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	}
 	data, err := c.SessionService.Authenticate(requestBody)
 	info := c.LocalErrorService.Map(err)
-	dtorespwithdata.New[SigningResult](
+	dtorespwithdata.New(
 		data,
 		info.ServiceErrorCode,
 		info.ServiceErrorMessage,
