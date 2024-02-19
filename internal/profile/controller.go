@@ -54,7 +54,7 @@ func (c *Controller) GetMyEhid(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dtorespwithdata.New[string](
+	dtorespwithdata.New(
 		&data,
 		localerror.ErrSvcCodeNone,
 		"OK",
@@ -75,7 +75,7 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 		chi.URLParam(r, "ehid"),
 	)
 	info := c.LocalErrorService.Map(err)
-	dtorespwithdata.New[Entity](
+	dtorespwithdata.New(
 		data,
 		info.ServiceErrorCode,
 		info.ServiceErrorMessage,
